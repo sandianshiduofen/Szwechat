@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#fff">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>添加常用收货电话</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/ucenter.js?v=1"></script>
+	<style type="text/css">
+	.common_msg{text-indent: 25%;line-height: 0.3rem;}
+	.table_div{padding:0.1rem 3%;color:#4a4a4a;}
+	.common_tel tr{border-bottom: 1px solid #ddd;}
+	.common_tel td{padding: 0.15rem 0;background: #fff;text-align: left;position: relative;}
+	.get_tel_code{position: absolute;right:0;top:0;padding:0.15rem;font-size:0.14rem;color:#4a90e2;}
+	</style>
+</head>
+<body style="background:#fff">
+
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title" onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="common_tel">
+	<p class="common_tel_ti">绑定常用电话，商家在发货时可搜索该电话，匹配到您的地址信息，能够更准确的给您发货，最多可上传10个</p>
+	<!-- <ul class="f14">
+		<li>
+			<p>常用手机<span id="num"></span></p>
+			<div class="comment_input">
+				<input class="comment_input_t" name="tel" type="number" oninput="if(value.length>12)value=value.slice(0,12);value=value.replace(/[^\d]/g,'')" onblur="telNo($(this))" autofocus="autofocus" placeholder="可输入固话/手机号">
+			</div>
+			<div class="comment_msg msg"></div>
+		</li>
+	</ul> -->
+	<div class="table_div">
+		<table class="w100">
+			<col width="25%">
+			<col width="75%">
+			<tr>
+				<td class="t_r f14">手机号码</td>
+				<td><input class="comment_input_tel" name="tel" type="number" oninput="if(value.length>11)value=value.slice(0,11);value=value.replace(/[^\d]/g,'')" onblur="PhoneNo($(this))" autofocus="autofocus" placeholder="请输入11位手机号"></td>
+			</tr>
+			<tr>
+				<td class="t_r f14">验证码</td>
+				<td>
+					<input type="text" name="code" placeholder="请输入手机验证码" oninput="if(value.length>6)value=value.slice(0,6)" onblur="verify($(this))">
+					<p class="get_tel_code" onclick="getTelCode($(this))">获取验证码</p>
+				</td>
+			</tr>
+		</table>
+
+	<div class="msg common_msg"></div>
+	</div>
+		
+	<footer>
+		<input class="footer_btn" type="button" value="保存电话" onclick="comTelSubmit()">
+	</footer>
+
+	<script type="text/javascript">
+	$(function() {
+		if (userId()) {
+			$('.comment_input_tel').focus();
+			if (GetQueryString('id')) {
+				$('title').html('编辑常用收货电话');
+				var phone=GetQueryString('tel')
+				var num=GetQueryString('num')
+				$('.comment_input_tel').val(phone);
+				$('#num').html(num);
+			}
+		}else{
+		    window.location.href='../login/not_login.html'
+		};
+	});
+	function shouBook(){
+		pushHistory();
+		var bool=false;
+		setTimeout(function(){
+			bool=true;
+	    },1000);
+	    window.addEventListener("popstate", function(e) {  
+			if(bool)
+			{
+				window.location.href='common_use_tel.html';
+			}
+			pushHistory();
+		}, false);
+	}
+	shouBook();
+
+	function getTelCode(e){
+		if (PhoneNo($('[name="tel"]'))) {
+			loading('获取中...');
+			var add_tel=$('[name="tel"]').val();
+			$.ajax({
+				url: api+'/api/wx/validation/getcode', 
+				type: 'POST',
+				dataType: 'json',
+				data: {phone:add_tel,type:6,requestTokenId:requestTokenId()},
+				success:function(data){
+					loadingRemove();
+					if (data.success) {
+						e.removeAttr('onclick').html('<span id="dao_time">60</span>秒再次获取');
+						telCountDown('#dao_time',60);
+					}else{
+						alert(data.message);
+					};
+				},
+		        complete : function(XMLHttpRequest,status){
+		            loadingRemove();
+		    　　　　if(status=='error'){
+		     　　　　　 fubottom('获取验证码失败，请重试');
+		    　　　　}else if(status=='timeout'){
+		                fubottom('获取验证码失败，请重试');
+		            }
+		    　　}
+			});
+		};
+	}
+
+	function telCountDown(e,num){
+		var num=num;
+		var timer=setInterval(function(){
+			num--;
+			$(e).html(num);
+			if (num==0) {
+				$(e).parents('p').attr('onclick', 'getTelCode($(this))').html('获取验证码');
+				clearInterval(timer);
+			};
+		}, 1000);
+	}
+ 
+	</script>
+
+</section>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

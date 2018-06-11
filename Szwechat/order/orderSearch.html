@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#fff">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>订单查询</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<style type="text/css">
+		.orderSearchT{background: #fff;padding:0.1rem 5% 0.2rem;border-bottom:0.1rem solid #efeff4;}
+		.orderSearchT>p{line-height: 0.3rem;font-size:0.16rem;padding-bottom:0.05rem;}
+		.searchInputW{overflow: hidden;}
+		.searchInputW>p{height:0.26rem;width:80%;float: left;border:1px solid #52bb03;}
+		.searchInputW>p>input{height:0.26rem;width:85%;float: left;text-indent: 0.05rem;}
+		.searchInputW>p>b{width:10%;float: right;position: relative;height:0.24rem;background: url(../skin/images/search1.png) center no-repeat;-webkit-background-size: 0.15rem;background-size: 0.15rem;}
+		.searchInputW>span{height:0.26rem;width:13%;float: left;background: url(../skin/images/sao.png) center no-repeat;-webkit-background-size: 0.24rem;background-size: 0.24rem;margin-left:2%;}
+		.searchBtn button{width:80%;height:0.26rem;text-align: center;line-height: 0.26rem;background: #52bb03;border:1px solid #52bb03;;font-size:0.16rem;color:#fff;margin-top:0.15rem;border-radius:3px;}
+
+		.orderSearchB{background: #fff;padding:0.1rem 5%;}
+		.orderHistory>p{line-height: 0.3rem;font-size:0.14rem;border-bottom:1px solid #ddd;font-size:0.16rem;}
+		.orderHistory>p>span{float: right;height:auto;font-size:0.14rem;color:#52bb03;}
+		.orderHistory>p>span>img{float: right;width:0.2rem;height:auto;}
+		.orderHistory>ul>li{height:0.4rem;line-height: 0.4rem;border-bottom:1px solid #eee;}
+		.logis_state_icon{overflow: hidden;padding-top:0.1rem;line-height: 0.3rem;font-size:0.14rem;}
+		.logis_state_icon span{overflow: hidden;}
+		.logis_state_icon b{height:0.3rem;float: left;margin-right:0.1rem;}
+		.logis_state_icon b img{height:0.28rem;width:auto;}
+
+		.orderSearchB .logis_state ul{padding:0;}
+		.orderSearchB .logis_state ul li{margin-left:13%;position: relative;}
+		.orderSearchB .logis_state ul li b{width:0.4rem;height:0.3rem;position: absolute;left:-0.5rem;top:0.05rem;background: url(../skin/images/quan.png)  center no-repeat;-webkit-background-size: auto 0.2rem;background-size: auto 0.2rem;}
+		.orderSearchB .logis_state ul li:first-child b{background-image: url(../skin/images/weizhi.png);}
+	</style>
+</head>
+<body style="background:#fff">
+<section>
+	<div class="orderSearchT">
+		<p>请输入或扫描运单</p>
+		<div class="searchInputW">
+			<p>
+				<input class="searchInput" type="search" onkeyup="value=value.replace(/[^\w]/ig,'');keyLogin()" onkeyup="">
+				<b></b>
+			</p>
+			<span id="shaoSearch"></span>
+		</div>
+		<div class="searchBtn">
+			<button style="button" class="">查询</button>
+		</div>
+	</div>
+	<div class="orderSearchB">
+		<div class="orderHistory" id="orderLogistics" style="display:none">
+			<p>查询结果:<span onclick="closeLogistics()">返回查询历史</span></p>
+			<div class="logis_state">
+				<div class="logis_state_icon"></div>
+				<ul></ul>
+			</div>
+		</div>
+
+		<div class="orderHistory" id="orderHistory">
+			<p>查询历史记录:<span onclick="delHostory()"><img src="../skin/images/delHostory.png" alt=""></span></p>
+			<ul></ul>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	$(function() {
+		orderHistoryList()
+	});
+	function orderHistoryList(){
+		if (localStorage.orderHistory) {
+			var orderList='';
+			var HistoryArr=localStorage.orderHistory.split(',');
+			for (var i = 0; i < HistoryArr.length; i++) {
+				orderList+='<li onclick="hostorySearch($(this))">单号：<span>'+HistoryArr[i]+'</span></li>'
+			};
+			$('#orderHistory ul').html(orderList);
+			$('#orderHistory p').html('查询历史记录:<span onclick="delHostory()"><img src="../skin/images/delHostory.png" alt=""></span>');
+		}else{
+			$('#orderHistory p').html('<p>无历史查询记录</p>');
+			$('#orderHistory ul').html('');
+		};
+	}
+
+	
+	/*微信扫一扫查询*/
+	$('#shaoSearch').click(function(event) {
+	var curUrl=document.location.href;
+	$.ajax({
+		url: api+'/api/wx/wecat/config',
+		type: 'POST',
+		timeout : 10000,
+		dataType: 'json',
+		data: {url:curUrl,requestTokenId:requestTokenId()},
+		success:function(data){
+			if (data.success) {
+				wx.config({
+				    debug: false,
+				    appId: data.info.appId,
+				    timestamp: data.info.timestamp,
+				    nonceStr: data.info.nonceStr,
+				    signature: data.info.signature,
+				    jsApiList: [
+				    	'scanQRCode',
+				    ]
+				});
+			}else{
+				$.MsgBox.Alert(data.message,'确定');
+			};
+		},
+        complete : function(XMLHttpRequest,status){
+            loadingRemove();
+            if(status=='error'){
+                alert('扫描调取失败，请重试');
+            }else if(status=='timeout'){
+                alert('扫描调取失败，请重试');
+            }
+        }
+	});
+		/*引入微信配置*/
+		wx.scanQRCode({
+			needResult: 1,
+			scanType: ["barCode"],
+			success: function (res) {
+				var result = res.resultStr;
+				if (result.split(',').length>1) {
+					$('.searchInput').val(result.split(',')[1]);
+					searchResult(result.split(',')[1]);
+					orderState(result.split(',')[1]);
+				}else{
+					$.MsgBox.Alert('未找到订单','确定');
+				};
+			}
+		});
+	});
+	/*点击查询按钮搜索*/
+	$('.searchBtn button,.searchInputW>p>b').click(function(event) {
+		var orderVal=$('.searchInput').val();
+		if (!orderVal) {
+			$.MsgBox.Alert('请输入订单号','确定');
+		}else{
+			searchResult(orderVal);
+		};
+	});
+	function searchResult(orderVal){
+		loading('查询中');
+		if (localStorage.orderHistory) {
+			var orderHistoryArr=localStorage.orderHistory.split(',');
+			var flas=0;
+			for (var i = 0; i < orderHistoryArr.length; i++) {
+				if (orderHistoryArr[i]==orderVal) {
+					flas=1;
+				}
+			};
+			if (!flas) {
+				localStorage.orderHistory=localStorage.orderHistory+','+orderVal;
+			};
+		}else{
+			localStorage.orderHistory=orderVal;
+		};
+		$.ajax({
+			url: apiAn+'/api/wx/waybill/getWaybillLog',
+			type: 'post',
+			timeout : 10000,
+			dataType: 'json',
+			data: {waybillNo:orderVal,requestTokenId:requestTokenId()},
+			success:function(data){
+				if (data.success) {
+					orderSearch(data);
+					orderState(orderVal);
+				}else{
+					$.MsgBox.Alert(data.message,'确定');
+				};
+			},
+	        complete : function(XMLHttpRequest,status){
+	            loadingRemove();
+	            if(status=='error'){
+	            	noResultErr($('.logis_state ul'),250,'查询出错了，请点击重试','searchResult('+orderVal+')');
+	            }else if(status=='timeout'){
+	            	noResultErr($('.logis_state ul'),250,'查询超时了，请点击重试','searchResult('+orderVal+')');
+	            }
+	        }
+		});
+		$('#orderLogistics').css('display', 'block');
+		$('#orderHistory').css('display', 'none');
+	}
+	function hostorySearch(e){
+		var orderVal=e.children('span').html();
+		$('.searchInput').val(orderVal);
+		searchResult(orderVal);
+	}
+	/*搜索物流内容*/
+	function orderSearch(data){
+		/*物流*/
+		var html="";
+		if (data.info.length!=0) {
+			for (var i = 0; i < data.info.length; i++) {
+				var curTime=new Date(data.info[i].logdate);
+				var time=curTime.format('yyyy/MM/dd hh:mm:ss');
+				var logvalue=data.info[i].contentForUser;
+				var r = /((([0-9]{7,13})(?!\d))|((\d{3})-(\d{7,8})(?!\d))|((\d{4})-(\d{7,8})(?!\d)))/gmi;
+					var rg = /((\d{3})-(\d{7,8})(?!\d))|((\d{4})-(\d{7,8})(?!\d))/gmi;
+					if (r.test(logvalue)) {
+					    var t1 = logvalue.match(r);
+					    for (var j = 0; j < t1.length; j++) {
+					    	var t2=t1[j].match(rg);
+					    	if (t1[j].length<13||t2) {
+						        var item = t1[j];
+						        logvalue =logvalue.replace(item, item.replace(r, '<a class="blue" href="tel:$1">$1</a>'));
+							}
+					    }
+					}
+				html+='<li><b></b><p>'+logvalue+'</p><span>'+time+'</span></li>';
+			};
+			$('.logis_state ul').html(html);
+		}else{
+			$('.logis_state ul').html('<li>暂无物流信息</li>');
+		};
+		
+	}
+	function orderState(order){
+		$.ajax({
+			url: apiAn+'/api/wx/waybill/getWaybill',
+			type: 'post',
+			timeout : 10000,
+			dataType: 'json',
+			data: {waybillNo:order,requestTokenId:requestTokenId()},
+			success:function(data){
+				if (data.success) {
+					var info=data.info;
+					/*物流状态*/
+					if (info!=null) {
+						var status=info.status;
+						var statusHtml="";
+						statusHtml+='<p>';
+						if (status=='0') {
+							statusHtml+='<b><img src="../skin/images/wuliu4.png" alt=""></b>货物状态：<span class="red">待揽货</span>';
+						}else if(status==1){
+							statusHtml+='<b><img src="../skin/images/wuliu4.png" alt=""></b>货物状态：<span class="red">已揽货</span>';
+						}else if(status==2){
+							statusHtml+='<b><img src="../skin/images/wuliu1.png" alt=""></b>货物状态：<span class="red">运输中</span>';
+						}else if(status==3){
+							statusHtml+='<b><img src="../skin/images/wuliu1.png" alt=""></b>货物状态：<span class="red">配送中</span>';
+						}else if(status==4){
+							statusHtml+='<b><img src="../skin/images/wuliu3.png" alt=""></b>货物状态：<span class="red">已取消</span>';
+						}else if(status==5){
+							statusHtml+='<b><img src="../skin/images/wuliu3.png" alt=""></b>货物状态：<span class="red">已退货</span>';
+						}else if(status==6){
+							statusHtml+='<b><img src="../skin/images/wuliu2.png" alt=""></b>货物状态：<span class="red">已签收</span>';
+						}else if(status==7){
+							statusHtml+='<b><img src="../skin/images/wuliu3.png" alt=""></b>货物状态：<span class="red">已驳回</span>';
+						};
+						statusHtml+='</p>';
+						/*运输状态*/
+						$('.logis_state_icon').html(statusHtml);
+					}else{
+						$('.logis_state_icon').html('未查到该订单');
+						$('.logis_state ul').html('');
+					};
+				}
+			},
+            complete : function(XMLHttpRequest,status){
+                loadingRemove();
+                if(status=='error'){
+                    noResultErr($('.logis_state_icon'),30,'运单状态查询出错了，请点击重试','orderState('+order+')');
+                    $('.noResult_c span img').remove();
+                }else if(status=='timeout'){
+                    noResultErr($('.logis_state_icon'),40,'运单状态查询出错了，请点击重试','orderState('+order+')');
+                    $('.noResult_c span img').remove();
+                }
+            }
+		});
+	}
+
+	function closeLogistics(){
+		orderHistoryList();
+		$('#orderLogistics').css('display', 'none');
+		$('#orderHistory').css('display', 'block');
+	}
+	function delHostory(){
+		if (confirm('确定要删除查询历史记录吗？')) {
+			localStorage.removeItem('orderHistory');
+			$('#orderHistory ul').html('');
+			orderHistoryList();
+		};
+	}
+	function keyLogin(){
+		if (event.keyCode==13){
+			$('.searchBtn button').click();
+			$('.searchInput').blur();
+		}
+	}
+</script>
+</section>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>个人中心</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/ucenter.js?v=3"></script>
+</head>
+
+<body>
+<section class="uc">
+	<input type="hidden" name="userFreezeReason">
+	<div class="uc_top">
+		<span><a href="head_portrait.html"><img id="header_img" src="../skin/images/headimg.png"></a></span>
+		<!-- <span><a href="javascript:;"><img id="header_img" src="../skin/images/headimg.png"></a></span> -->
+		<p><b id="uc_company"></b><span id="uc_tel"></span></p>
+		<a href="../ucenter/qr_code.html"><img src="../skin/images/ucenter10.png" alt="我的二维码"></a>
+	</div>
+	<div class="uc_li">
+		<ul>
+			<li>
+				<a class="uc_li_a" href="account.html">
+					<span class="uc_li_tit">我的账户</span>
+					<b id="guardAmount">可提现金额 ¥<span>0.00</span></b>
+				</a>
+			</li>
+			<li>
+				<a class="uc_li_a" href="../ucenter/ticket.html">
+					<span class="uc_li_tit">我的券包</span>
+				</a>
+			</li>
+			<li>
+				<a class="uc_li_a" href="../ucenter/ship_address.html">
+					<span class="uc_li_tit">发货地址薄</span>
+				</a>
+			</li>
+			<li>
+				<a class="uc_li_a" href="../ucenter/receiving_party.html">
+					<span class="uc_li_tit">收货地址薄</span>
+				</a>
+			</li>
+			<li>
+				<a class="uc_li_a" href="../ucenter/common_use_tel.html">
+					<span class="uc_li_tit">常用收货电话</span>
+				</a>
+			</li>
+			<li>
+				<a class="uc_li_a" href="../ucenter/reset_password.html">
+					<span class="uc_li_tit">安全管理</span>
+				</a>
+			</li>
+			<li>
+				<a class="uc_li_a uc_li_jie" href="javascript:exitUser();MtaH5.clickStat('ucenter_ucenter_unbind')">
+					<span class="uc_li_tit">微信绑定</span>
+					<b style="font-weight:normal">解绑</b>
+				</a>
+			</li>
+			<li>
+				<span>客服电话</span><a class="uc_li_tel" href="tel:4001821200">4001821200</a>
+			</li>
+		</ul>
+	</div>
+	<!-- <button type="button" class="logout" onclick="exitUser()">退出账户</button> -->
+</section>
+
+<script type="text/javascript">
+$(function() {
+	if (userId()) {
+		loading('loading...');
+		finduser();
+	}else if(!GetQueryString('code')){
+		document.write('<p style="text-align:center;line-height:4rem;font-size:20px;">请在微信三真驿道公众号菜单中打开</p>')
+	}
+});
+
+function finduser(){
+	$.ajax({
+		url: apiL+'/api/wx/login/finduser',
+		type: 'post',
+		timeout : 10000,
+		dataType: 'json',
+		data: {id:userId(),requestTokenId:requestTokenId()},
+		success:function(data){
+			console.log(data);
+			loadingRemove();
+			if (data.success) {
+				var info=data.info||{};
+				if (!info.company) {
+					console.log(info);
+					window.location.href='/login/login_addr.html?unionid='+info.unionid;
+				}else{
+					// console.log(info)
+					if (info.headUrl) {
+						$('#header_img').attr('src', imgShowApi()+''+info.headUrl);
+					};
+					$('#uc_company').html(info.company);
+					$('#uc_tel').html(info.userName);
+					AccBankList();
+				};
+				if (info.userState==1) {
+					$('[name="userFreezeReason"]').val(info.userFreezeReason);
+					
+					$('a:not([href="account.html"]').attr('href', 'javascript:fengting();');
+					$('a.uc_li_tel').attr('href', 'tel:4001821200');
+					$('a.uc_li_jie').attr('href', 'javascript:exitUser()');
+				};
+			}else{
+				alert(data.message);
+			};
+		},
+		complete : function(XMLHttpRequest,status){
+            loadingRemove();
+            if(status=='error'){
+                $.MsgBox.Confirmt("请求超时，获取用户失败，</br>重新获取或退出页面",'重新获取','退出页面',function(){
+					WeixinJSBridge.call('closeWindow');
+			    },function(){
+			        finduser();
+			    });
+            }else if(status=='timeout'){
+            	$.MsgBox.Confirmt("请求超时，获取用户失败，</br>重新获取或退出页面",'重新获取','退出页面',function(){
+					WeixinJSBridge.call('closeWindow');
+			    },function(){
+			        finduser();
+			    });
+            }
+        }
+	});
+}
+function AccBankList(){
+	$.ajax({
+		url: api+'/api/wx/account/bank/list',
+		type: 'POST',
+		timeout : 10000,
+		dataType: 'json',
+		data: {account:account(),requestTokenId:requestTokenId()},
+		success:function(data){
+			loadingRemove();
+			// console.log(data)
+			if (data.success) { 
+				var info=data.info||{};
+				$('#guardAmount span').html(toDecimal2(info.extractAmount));
+			}else{
+				alert(data.message);
+			};
+		},
+		complete : function(XMLHttpRequest,status){
+            loadingRemove();
+            if(status=='error'){
+                $.MsgBox.Confirmt("请求超时，获取用户失败，</br>重新获取或关闭弹框",'重新获取','关闭',function(){
+					WeixinJSBridge.call('closeWindow');
+			    },function(){
+			        AccBankList();  
+			    });
+            }else if(status=='timeout'){
+            	$.MsgBox.Confirmt("请求超时，获取用户失败，</br>重新获取或关闭弹框",'重新获取','关闭',function(){
+					WeixinJSBridge.call('closeWindow');
+			    },function(){
+			        AccBankList();
+			    });
+            }
+        }
+	});
+}
+function fengting(){
+	var userFreezeReason=$('[name="userFreezeReason"]').val();
+	$.MsgBox.Confirmt("对不起，您的账号已被封停，封停原因："+userFreezeReason+"，如有疑问，请联系客服：4001-821200",'拨打电话','关闭',function(){
+		return false;
+    },function(){
+        window.location.href='tel:4001821200';
+    });
+}
+
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

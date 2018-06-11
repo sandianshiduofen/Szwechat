@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#fff;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>运单条码</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/clipboard.min.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/Barcode/JsBarcode.code128.min.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/details.js?v=1"></script>
+</head>
+<body style="background:#fff;">
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="window.location.href='../../order/send_out.html'">返回上一页</div>
+		<div class="header_title"  onclick="window.location.href='../../order/send_out.html'">返回</div>
+	</div>
+</header>
+<section class="order_succeed">
+	<div class="bar_code" onclick="displayB($('.bar_code_wrap'));MtaH5.clickStat('order_scan_barcode')">
+		<img class="barcode" id="barCode1">
+	</div>
+	<div class="parcel_numble">货物件数：&nbsp;&nbsp;<span>加载中... </span></div>
+	<div class="waybill_share">
+		<a href="../order/share.html">
+			<img src="../skin/images/weixin.png" alt="">
+			<span>运单分享</span>
+		</a>
+		<p onclick="displayB($('.waybill_wrap'));MtaH5.clickStat('order_scan_show')">
+			<img src="../skin/images/fenxiang.png" alt="">
+			<span>运单信息</span>
+		</p>
+	</div>
+	<div class="waybill_info">
+		<p>揽货网点：</p>
+		<p>联系电话：</p>
+		<p>网点地址：</p>
+	</div>
+
+<!-- 条形码放大浮层 -->
+<div class="bar_code_wrap" onclick="displayN($(this));">
+	<!-- <p>再点击一下缩小</p> -->
+	<div class="bar_code_dao" style="height:auto;">
+		<img class="barcode2" id="barCode2">
+	</div>
+</div>
+
+<!-- 详情浮层 -->
+<div class="waybill_wrap">
+	<div class="waybill">
+		<div class="waybill_pop_c">
+			<div class="receive_pop_tit"><span onclick="displayN($('.waybill_wrap'));"></span></div>
+			</div>
+		</div>
+	</div>
+</section>
+<script type="text/javascript">
+
+if (userId()) {
+	clipboard();
+	orderSuccess();
+	function popstateSend(){
+		pushHistory();
+		var bool=false;
+		setTimeout(function(){
+			bool=true;
+	    },1000);
+	    window.addEventListener("popstate", function(e) {  
+			if(bool)
+			{
+				window.location.href='../../order/send_out.html'
+			}
+			pushHistory();
+		}, false);
+	}
+	popstateSend()
+}else{
+    window.location.href='../login/not_login.html'
+};
+	
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

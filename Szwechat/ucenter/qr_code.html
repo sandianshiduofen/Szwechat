@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#000;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>我的二维码</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/jquery.qrcode.min.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/ucenter.js?v=1"></script>
+</head>
+<body style="background:#000;">
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="qr_code">
+	<div class="qr_code_c">
+		<h5 id="complain"></h5>
+		<p id="tel"></p>
+		<!-- <div><img src="../skin/images/qr.jpg" alt=""></div> -->
+		<div class="qrcode_w"><div id="qrcode"></div></div>
+		<span>扫描二维码，可以将我添加到线路中</span>
+	</div>
+</section>
+<script type="text/javascript">
+$(function() {
+	if (userId()) {
+		complain();
+	}else{
+	    window.location.href='../login/not_login.html'
+	};
+});
+function complain(){
+	if (userId()) {
+		loading('loading...');
+		$.ajax({
+			url: apiL+'/api/wx/login/finduser',
+			type: 'post',
+			dataType: 'json',
+			data: {id:userId,requestTokenId:requestTokenId()},
+			success:function(data){
+				loadingRemove();
+				if (data.success) {
+					$('#complain').html(data.info.company);
+					$('#tel').html(data.info.userName);
+					$('#qrcode').html('');
+					jQuery('#qrcode').qrcode({text:data.info.number});
+				}else{
+					alert(data.message);
+				};
+			},
+	        complete : function(XMLHttpRequest,status){
+	            loadingRemove();
+	    　　　　if(status=='error'){
+	    			noResultErr($('#qrcode'),200,'信息获取失败，请点击重试','complain();');
+	    			$('.noResult_c p').css('color', '#fff');
+	    　　　　}else if(status=='timeout'){
+	                noResultErr($('#qrcode'),200,'信息获取失败，请点击重试','complain();');
+	    			$('.noResult_c p').css('color', '#fff');
+	            }
+	    　　}
+		});
+	};
+}
+</script>
+<script>
+	var _mtac = {};
+	(function() {
+		var mta = document.createElement("script");
+		mta.src = "http://pingjs.qq.com/h5/stats.js?v2.0.2";
+		mta.setAttribute("name", "MTAH5");
+		mta.setAttribute("sid", "500565182");
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(mta, s);
+	})();
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

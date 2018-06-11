@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#fff;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>编辑收货方</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<link rel="stylesheet" type="text/css" href="../skin/js/area/css/mui.picker.css?v=1"/>
+    <script src="../skin/js/area/js/mui.min.js?v=1"></script>
+	<script src="../skin/js/area/js/mui.picker.min.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/areaSource.js?v=1"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.0&key=95596fede2fcca4aa69d161f5c238e22"></script>
+	<!-- <script type="text/javascript" src="../skin/js/area.js"></script> -->
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/editAddr.js?v=1"></script>
+</head>
+<body style="background:#fff;">
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="consigner">
+	<div class="consigner_t">
+		<table class="w100">
+			<col width="25%">
+			<col width="75%">
+			<tr>
+				<td class="t_r f14"><span class="red">*</span>收&nbsp; 货 方:</td>
+				<td><input name="client" type="text" placeholder="请输入单位名称" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\(\)\（\）\,\，\-\_\=\+\#\|\*\+\.\。\、\？\/\!\！]/g,'');noNullfa($(this),'单位名称')" maxlength="50"></td>
+			</tr>
+			<tr>
+				<td class="t_r f14">联&nbsp; 系 人:</td>
+				<td><input name="name" type="text" placeholder="请输入联系人姓名" maxlength="20" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');nameLen(value)"></td>
+			</tr>
+			<tr>
+				<td class="t_r f14"><span class="red">*</span>电&#x3000;&#x3000;话:</td>
+				<td><input name="tel" type="number" placeholder="请输入手机号或固话"  onblur="telNo($(this))" oninput="if(value.length>11)value=value.slice(0,11)"></td>
+			</tr>
+			<tr>
+				<td class="t_r f14"><span class="red">*</span>收货地址:</td>
+				<td>
+					<span id="addr_aera" class="c999">选择所在省、市、区</span>
+					<!-- <input name="aera" id="addr_aera" type="text" placeholder="选择所在省、市、区" readonly onchange="noNull($(this),'所在省、市、区')"> -->
+					<input id="addr_value" name="aeraNum" type="hidden" value=""/>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input name="detail" type="text" placeholder="请输入详细地址" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\,\，\-\_\=\+\#\|\*\+\.\。\、\？\/\!\！]/g,'');noNullfa($(this),'详细地址')" maxlength="50"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="msg consigner_msg"></div>
+	<div class="tacitly_approve"></div>
+</section>
+
+<footer class="footer2">
+	<input class="footer_btn" type="button" value="确认" onclick="receivingSubmit()">
+</footer>
+
+<script type="text/javascript">
+if (userId()) {
+	deliveryShow();
+	function recBook(){
+		pushHistory();
+		var bool=false;
+		setTimeout(function(){
+			bool=true;
+	    },1000);
+	    window.addEventListener("popstate", function(e) {  
+			if(bool)
+			{
+				window.location.href='ship_address.html';
+			}
+			pushHistory();
+		}, false);
+	}
+	recBook();
+}else{
+    window.location.href='../login/not_login.html'
+};
+	
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

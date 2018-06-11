@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#fff;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>网点详细信息</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/details.js?v=2"></script>
+</head>
+<body style="background:#fff;">
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section>
+	<div class="branch_info f14">
+		
+	</div>
+</section>
+
+<script type="text/javascript">
+if (userId()) {
+	branchInfo();
+}else{
+    window.location.href='../login/not_login.html'
+};
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

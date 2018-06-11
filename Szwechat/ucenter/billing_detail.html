@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>账单明细</title>
+	<link rel="stylesheet" href="../skin/css/account.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/account.js?v=1"></script>
+</head>
+<body>
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="billing_detail">
+	<div class="act_amount bill_detail_t">
+		<p class="withdraw_sum">¥ <b>6000.00</b>元</p>
+		<ul class="protection">
+			<li>
+				<p>买家支付（元）</p>
+				<p>+52.00</p>
+			</li>
+			<li>
+				<p>银行手续费（元）</p>
+				<p>-100.00</p>
+			</li>
+		</ul>
+	</div>
+	<div class="bill_info">
+		<p>北京顺泰汽修厂</p>
+		<p><span>收 货 人：流线</span><span>联系电话：135656562356</span></p>
+		<p>收货地址：北京市丰台区总部基地八区十二号楼2层</p>
+	</div>
+	<div class="bill_info">
+		<p>备注信息</p>
+		<ul class="bill_info_img">
+			<li><img class="remark_img" onclick="magnify($(this))" src="../skin/images/coupon.jpg"></li>
+			<li><img class="remark_img" onclick="magnify($(this))" src="../skin/images/com_img_bg.jpg"></li>
+			<li><img class="remark_img" onclick="magnify($(this))" src="../skin/images/coupon.jpg"></li>
+			<li><img class="remark_img" onclick="magnify($(this))" src="../skin/images/com_img_bg.jpg"></li>
+		</ul>
+		<p>备注信息：北京讯太汽修厂</p>
+	</div>
+	<div class="bill_info">
+		<p>发票信息：不开发票</p>
+		<p>发票信息：油品</p>
+	</div>
+	<div class="bill_info">
+		<p>卖&#x3000;&#x3000;家：北京顺丰汽修厂</p>
+		<p>支付方式：银联支付</p>
+		<p>订 单 号：1700800000012</p>
+		<p>付款时间：2017-05-05 12:02:02</p>
+	</div>
+</section>
+<div class="fu_hei" onclick="shrink()"></div>
+<script type="text/javascript">
+	function magnify(e){
+		$('.fu_hei').show();
+		$('body').append('<div class="div_img" onclick="shrink()"></div>')
+		$('.div_img').append(e.clone(true));
+		var height=$('body>.div_img').height();
+		// console.log($('body>.div_img'));
+		$('body>.div_img>img').addClass('fangda').removeAttr('onclick');
+		// console.log(height);
+		$('body>.div_img').css('margin-top', -height/2);
+	}
+	function shrink(){
+		$('.fu_hei').hide();
+		$('body>.div_img').remove();
+	}
+
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

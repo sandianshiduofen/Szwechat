@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" style="background:;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>注册信息</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<link rel="stylesheet" type="text/css" href="../skin/js/area/css/mui.picker.css?v=1"/>
+    <script src="../skin/js/area/js/mui.min.js?v=1"></script>
+	<script src="../skin/js/area/js/mui.picker.min.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.0&key=95596fede2fcca4aa69d161f5c238e22"></script>
+	<script type="text/javascript" src="../skin/js/areaSource.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+</head>
+<body>
+<nav class="login_nav">
+	<p class="current"><i></i><b></b><span>验证手机</span></p>
+	<p></p>
+	<p class="current"><i></i><b></b><span>维护信息</span></p>
+	<p></p>
+	<p><b></b><span>完成</span></p>
+</nav>
+
+<section class="login" id="login_addr">
+	<table class="login_table">
+		<col width="18px">
+		<col width="82px">
+		<tr>
+			<td class="login_icon login_icon3"></td>
+			<td><input class="login_input company" name="company" type="text" placeholder="请输入公司名称" onblur="noNullfa($(this),'公司名称')" maxlength="50"></td>
+		</tr>
+		<tr>
+			<td class="login_icon login_icon4"></td>
+			<td><input class="login_input" name="name" type="text" placeholder="请输入联系人名称" maxlength="20" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');nameLen(value)"></td>
+		</tr>
+		<tr>
+			<td class="login_icon login_icon5"></td>
+			<td>
+				<span id="addr_aera" class="c999">选择所在省、市、区</span>
+				<!-- <input id="addr_aera" class="login_input addr_aera" name="addrAera" type="text" placeholder="选择所在省、市、区" onchange="noNull($(this),'所在省、市、区')" readonly> -->
+				<input id="addr_value" type="hidden" value="" name="addrAeraNum" />
+			</td>
+		</tr>
+		<tr>
+			<td class="login_icon login_icon6"></td>
+			<td><input class="login_input addr_detail" name="addrDetail" type="text" placeholder="请输入详细地址"  onblur="noNullfa($(this),'详细地址')" maxlength="40"></td>
+		</tr>
+	</table>
+	<div class="msg_w"><p class="msg"></p></div>
+<footer class="footer2">
+	<input class="footer_btn" type="button" value="下一步" onclick="addrSubmit()">
+</footer>
+</section>
+
+<script type="text/javascript">
+	addr_aera2();
+	popstate();
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

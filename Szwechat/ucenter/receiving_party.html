@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>收货地址薄</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/addBook.js?v=1"></script>
+</head>
+<body>
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="send_receive">
+	<div class="send_search ship_search">
+		<input class="search_input" type="search" placeholder="收货方、电话" onkeyup="keyLogin()">
+		<a href="javascript:;" class="search_btn" onclick="searchRec();MtaH5.clickStat('ucenter_receivingparty_search')"></a>
+	</div>
+	<div class="record_list"></div>
+</section>
+<footer>
+	<a class="footer_btn" href="../ucenter/receiving_edit.html">新增收货地址</a>
+</footer>
+<script type="text/javascript">
+if (userId()) {
+	receivingParty();
+	popstateUcenter();
+}else{
+	window.location.href='../login/not_login.html'
+};
+function keyLogin(){
+	if (event.keyCode==13){
+		$('.search_input').blur();
+		searchRec();
+	}
+}
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

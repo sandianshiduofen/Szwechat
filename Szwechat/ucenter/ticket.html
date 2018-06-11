@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>运费券</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/jquery.qrcode.min.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/ucenter.js?v=1"></script>
+</head>
+<body>
+<header class="header_box3">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+		<a class="header_btn" href="javascript:openRegul();MtaH5.clickStat('ucenter_ticket_rule')">使用规则</a>
+	</div>
+</header>
+<section class="ticket">
+	<div class="regional">
+		<ul class="ticket_ul">
+			
+		</ul>
+	</div>
+	<!-- <div class="regional"><div class="noResult" style="height:400px"><div class="noResult_flex"><div class="noResult_c"><span><img src="../skin/images/no_find.png" alt=""></span><p>对不起，您还没有添加地址</p></div></div></div></div> -->
+	
+	<div class="tacket_info">
+		<p>
+			本活动最终解释权归北京三真车联信息技术有限公司所有，<br>如有疑问，请拨打客服电话：<a href="tel:4001821200">400-1821-200</a>
+		</p>
+	</div>
+	<div class="regul_bg"></div>
+	<div class="regul">
+		<h5>活动规则</h5>
+		<div class="regul_c">
+			<p>1.请在有效期内使用此券，过期失效。</p>
+			<p>2.单笔运单仅限使用一张运费抵扣券。</p>
+			<p>3.此券仅限券面指定城市范围使用，请慎重选择。</p>
+			<p>4.此券抵扣金额大于实际运费时，不找零不退还。</p>
+			<p>5.此券一经发放、 领取，即与您的平台账号绑定，不可赠与、转售。</p>
+			<p>6.此券仅限支付运费时使用，扫码验证通过后即表示已使用，取消支付不退回。</p>
+			<p>7.详询此券使用规则，请致电：400 1821 200</p>
+		</div>
+		<button type="button" onclick="closeRegul()">我知道了</button>
+	</div>
+</section>
+
+<script type="text/javascript">
+function openRegul(){
+	$('.regul,.regul_bg').css('display', 'block');
+}
+function closeRegul(){
+	$('.regul,.regul_bg').css('display', 'none');
+}
+$(function() {
+	if (userId()) {
+		tickedList();
+	}else{
+	    window.location.href='../login/not_login.html'
+	};
+});
+function tickedList(){
+	loading('加载中...');
+	$.ajax({
+		url: apiZhao+'/api/platform/coupon/list',
+		type: 'POST',
+		dataType: 'json',
+		timeout : 10000,
+		data: {userId:userId(),requestTokenId:requestTokenId()},
+		success:function(data){
+			loadingRemove();
+			if (data.success) {
+				// console.log(data);
+				var info=data.info||{};
+				if (info.length) {
+					var html="";
+					html+='<ul class="ticket_ul">';
+					for (var i = 0; i < info.length; i++) {
+						var startTimeC=new Date(info[i].startDate);
+						var startTime=startTimeC.format('yyyy.MM.dd');
+						var endTimeC=new Date(info[i].endDate);
+						var endime=endTimeC.format('yyyy.MM.dd');
+						if (info[i].useableAddr==null) {
+							var useableAddr='全国';
+						}else{
+							var useableAddr=info[i].useableAddr;
+						};
+						html+='<li onclick="tickedQrOpen('+info[i].id+','+info[i].amount+')"><div class="ticket_b">'
+								+'<img src="../skin/images/coupon.jpg" alt="">'
+								+'<div class="ticket_t">'
+									+'<span><i>'+info[i].amount+'</i></span>'
+									+'<div class="ticket_r">'
+										+'<p class="ticket_tit">'+info[i].couponName+'</p>'
+										+'<p class="ticket_time"><span class="red">有效期：</span>'+startTime+'-'+endime+'</p>'
+									+'</div>'
+								+'</div>'
+								+'<p class="ticket_area"><span class="aera">使用区域：'+useableAddr+'</span><span class="num">'+info[i].leftNum+'张</span></p>'
+							+'</div></li>';
+					};
+					html+='</ul>'
+					$('.regional').html(html);
+				}else{
+					noResult($('.regional'),400,'您还没有运费券');
+				};
+			}else{
+				alert(data.message);
+			};
+		},
+		complete : function(XMLHttpRequest,status){
+			loadingRemove();
+	　　　　if(status=='error'){
+	 　　　　　 noResultErr($('.regional'),400,'请求超时，请点击重新获取','tickedList()');
+	　　　　}else if(status=='timeout'){
+				noResultErr($('.regional'),400,'请求超时，请点击重新获取','tickedList()');
+			}
+	　　}
+	});
+}
+
+
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

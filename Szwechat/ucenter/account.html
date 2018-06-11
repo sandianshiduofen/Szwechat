@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>我的账户</title>
+	<link rel="stylesheet" href="../skin/css/account.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/account.js?v=1"></script>
+</head>
+<body>
+<section class="account">
+	<header class="header_box">
+		<div class="header">
+			<div class="header_goback" onclick="window.location.href='../ucenter/ucenter.html'">返回上一页</div>
+			<div class="header_title"  onclick="window.location.href='../ucenter/ucenter.html'">返回</div>
+		</div>
+	</header>
+	<div id="act_remind_w"></div>
+	<div class="act_amount">
+		<p class="withdraw_sum">可提现金额 <span class="red"> ¥ <i id="extractAmount" style="font-style:normal">0.00</i></span><b class="wen" onclick="mount_hint();MtaH5.clickStat('ucenter_account_question');"></b></p>
+		<ul class="protection"> 
+			<li>
+				<p>¥<span id="guardAmount">0.00</span></p>
+				<p>保护期金额</p>
+			</li>
+			<li>
+				<p>¥<span id="sumAmount">0.00</span></p>
+				<p>总金额</p>
+			</li>
+		</ul>
+		<a href="javascript:withdraw();" class="deposit">提现</a>
+	</div>
+	<ul class="my_account">
+		<li class="my_ac_detail">
+			<a href="../ucenter/billing.html">
+				<p>账户明细</p>
+			</a>
+		</li>
+		<li class="my_ac_ka">
+			<!-- <a href="../ucenter/bank_card.html"> -->
+			<a id="myBindBand" href="../ucenter/tel_code.html">
+				<p><span>我的银行卡</span> <br>取出的金额会打到绑定银行卡上</p>
+				
+			</a>
+		</li>
+	</ul>
+</section>
+
+<script type="text/javascript">
+if (userId()) {
+	accountAcc();
+}else{
+    window.location.href='../login/not_login.html'
+};
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>修改安全密码</title>
+	<link rel="stylesheet" href="../skin/css/account.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<!-- <script type="text/javascript" src="../skin/js/pop_up.js"></script> -->
+	<script type="text/javascript" src="../skin/js/jp.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/account.js?v=1"></script>
+</head>
+<body>
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="bank_bind" id="bank_bind">
+	<p class="bank_bind_t">为了您的账户安全，请您填写以下信息并完成验证</p>
+	<div class="bank_bind_input">
+		<ul>
+			<li><span>安全密码</span><input type="password" name="password" placeholder="请输入6位数字安全密码" oninput="if(value.length>6)value=value.slice(0,6)" onkeyup="$('.msg').html('');" maxlength="6"></li>
+		</ul>
+		<p class="t_r"><a class="blue" href="../ucenter/tel_code.html?find=1">忘记密码？</a></p>
+	</div>
+	<div class="msg_w"><p class="msg"></p></div>
+	<div class="bank_bind_bot">
+		<div class="bank_bind_btn"><a class="deposit" onclick="fillInPaySubmit()" href="javascript:;">下一步</a></div>
+	</div>
+</section>
+<script type="text/javascript">   
+    if (!userId()) {
+        window.location.href='../login/not_login.html'
+    }
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>账单明细</title>
+	<link rel="stylesheet" href="../skin/css/account.css?v=1">
+	<link rel="stylesheet" href="../skin/js/mobiscroll/mobiscroll.css?v=1">
+	<link rel="stylesheet" href="../skin/images/zhuan.gif">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/mobiscroll/mobiscroll_date.js?v=1" charset="gb2312"></script>
+	<script type="text/javascript" src="../skin/js/mobiscroll/mobiscroll.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/account.js?v=1"></script>
+</head>
+<body>
+<header class="header_box2">
+	<div class="header">
+		<div class="header_goback" onclick="window.location.href='./account.html'">返回上一页</div>
+		<div class="header_title"  onclick="window.location.href='./account.html'">返回</div>
+		<a class="header_btn" href="javascript:billFilt();" onclick="MtaH5.clickStat('ucenter_billing_filtrate');">筛选</a>
+	</div>
+</header>
+<section class="billing">
+	<input type="hidden" name="pageTime">
+	<div class="billing_top">
+		<p>当月收入：¥<span id="income">0.00</span></p>
+		<p>当月支出：¥<span id="expend">0.00</span></p>
+	</div>
+	<ul class="billing_bot">
+	</ul>
+	<div class="loading" style="text-align:center" data-page=""></div>
+</section>
+<div class="supernatant_w"></div>
+	<div class="supernatant_r">
+		<div class="header_fu">
+			<div class="header_goback" onclick="billFiltBack()">返回上一页</div>
+			<div class="header_title"  onclick="billFiltBack()">返回</div>
+		</div>
+		<div class="billing_fu">
+			<h4>类别筛选</h4>
+			<ul>
+				<li><label><input type="checkbox" name="type" value="4"><span>货款支付</span></label></li>
+				<li><label><input type="checkbox" name="type" value="5"><span>报价单支付</span></label></li>
+				<li><label><input type="checkbox" name="type" value="6"><span>提现</span></label></li>
+				<li><label><input type="checkbox" name="type" value="3"><span>代收货款</span></label></li>
+			</ul>
+			<h4>时间筛选</h4>
+			<div class="billing_time"><input type="text" id="time" name="time" readonly value=""></div>
+		</div>
+		<div class="billing_btn">
+			<a class="reset_bill" href="javascript:billFiltReset();MtaH5.clickStat('ucenter_billing_reset');">重置</a>
+			<a class="true_bill" href="javascript:accountDetailSearch();">确认</a>
+		</div>
+	</div>
+	<input type="hidden" class="loadOver">
+	<style type="text/css">
+	.android-ics .dw .dwwl2{display:none;}
+	</style>
+<script type="text/javascript">
+var load_flag=true;
+var pageTimes="";
+$(function() {
+	if (userId()) {
+		var accountType=GetQueryString('accountType');
+		var searchTimeCuo=GetQueryString('searchTimeCuo');
+		if (accountType) {
+			var accountTypeArr=accountType.split(',');
+			for (var i = 0; i < accountTypeArr.length; i++) {
+				$('[value="'+accountTypeArr[i]+'"]').attr('checked', 'checked');
+			};
+		};
+		if(searchTimeCuo){
+			var searchTime=new Date(parseInt(searchTimeCuo));
+			var searchTimeT=searchTime.format('yyyy-MM');
+			$('[name="time"]').val(searchTimeT);
+		}else{
+			var dataTime = new Date();
+			dataTime.setTime(dataTime);
+			var dataTimeShow=dataTime.format('yyyy-MM');
+			$('[name="time"]').val(dataTimeShow);
+		};
+		if (searchTimeCuo||accountType) {
+			loading('loading...');
+			accountListSeatch(accountType,searchTimeCuo);
+		}else{
+			loading('loading...');
+			accountList();
+		};
+		$(document).scroll(function(){
+			var loadOver=$('.loadOver').val();
+			var bheight = $(window).height();
+			var sheight = $("body")[0].scrollHeight;
+			var stop = $("body").scrollTop();
+			if(stop == sheight-bheight&&!loadOver){
+				load_flag=false;
+				if (searchTimeCuo||accountType) {
+					accountListSeatch(accountType,searchTimeCuo,pageTimes);
+				}else{
+					accountList(pageTimes);
+				};
+				$('.loading').html('<img src="../skin/images/loading1.gif" alt="正在加载...">')
+			}
+		});
+	}else{
+	    window.location.href='../login/not_login.html'
+	};
+});
+function accountList(pageTime){
+	$.ajax({
+		url: apiHaiL+'/api/account/wecat/payment/list',
+		type: 'POST',
+		dataType: 'json',
+		data: {account:account(),pageTime:pageTime,pageSize:15,requestTokenId:requestTokenId()},
+		success:function(data){
+			loadingRemove();
+			$('.loading').html('');
+			$('.loading').removeAttr('onclick');
+			if (data.success) {
+				contentList(data,pageTime);
+			}else{
+				alert(data.message);
+			};
+		},
+        complete : function(XMLHttpRequest,status){
+            loadingRemove();
+    　　　　if(status=='error'){
+     　　　　　 $('.loading').html('获取失败，请点击重试').attr('onclick', 'accountList('+pageTime+')');
+    　　　　}else if(status=='timeout'){
+     　　　　　 $('.loading').html('获取失败，请点击重试').attr('onclick', 'accountList('+pageTime+')');
+            }
+    　　}
+	});
+}
+
+function accountListSeatch(accountType,searchTimeCuo,pageTime){
+	$.ajax({
+		url: apiHaiL+'/api/account/wecat/payment/list',
+		type: 'POST',
+		dataType: 'json',
+		data: {account:account(),pageTime:pageTime,pageSize:15,types:accountType,startTime:searchTimeCuo,requestTokenId:requestTokenId()},
+		success:function(data){
+			loadingRemove();
+			$('.loading').html('');
+			$('.loading').removeAttr('onclick');
+			if (data.success) {
+				contentList(data,pageTime);
+			}else{
+				alert(data.message);
+			};
+		}
+	});
+}
+
+function contentList(data,pageTime){
+	// console.log(data);
+	var info=data.info;
+	var list=info.list;
+	var html='';
+
+	$('#income').html(info.countInfo.incomeAmount.toFixed(2));
+	$('#expend').html(info.countInfo.expenditureAmount.toFixed(2));
+	for (var i = 0; i < list.length; i++) {
+		var currentTime=new Date();
+		var currentTimeT=currentTime.format('MM月dd');
+		var yesterdayTime=new Date(currentTime-86400000);
+		var yesterdayTimeT=yesterdayTime.format('MM月dd');
+		var creatTime=new Date(parseInt(list[i].createTime));
+		var creatTimeD=creatTime.format('MM月dd');
+		var creatTimeT=creatTime.format('hh:mm');
+		if (creatTimeD==currentTimeT) {
+			creatTimeD='今天';
+		};
+		if (creatTimeD==yesterdayTimeT) {
+			creatTimeD='昨天';
+		};
+		var sourceName=list[i].sourceName;
+		if (sourceName==null) {
+			sourceName='';
+		};
+		if (list[i].fromlogType==0) {/* html+='<li><a href="../ucenter/deposit.html?order='+list[i].sourceNo+'">'*/
+			if (list[i].status==4) {
+				html+='<li><a href="javascript:;">'
+				+'<div class="billing_time"><p>'+creatTimeD+'</p><p>'+creatTimeT+'</p></div>'
+				+'<div class="billing_money">'
+					+'<p>提现单号：<b>'+list[i].sourceNo+'</b></p>'
+					+'<p><span>提现失败返款</span></p>'
+				+'</div>'
+				+'<div class="billing_price">'
+					+'<span>'+list[i].amountName+'</span>'
+					+'</div></a></li>';
+			}else{
+				html+='<li><a href="javascript:;">'
+				+'<div class="billing_time"><p>'+creatTimeD+'</p><p>'+creatTimeT+'</p></div>'
+				+'<div class="billing_money">'
+					+'<p>提现单号：<b>'+list[i].sourceNo+'</b></p>'
+					+'<p><span>提现</span></p>'
+					+'<p>到账金额：'+list[i].receivableAmountName+'</p>'
+				+'</div>'
+				+'<div class="billing_price">'
+					+'<span>'+list[i].amountName+'</span>'
+					+'</div></a></li>';
+			};
+		}else if(list[i].fromlogType==1){
+			// html+='<li><a href="../ucenter/quote.html?order='+list[i].sourceNo+'">'
+			html+='<li><a href="javascript:;">'
+				+'<div class="billing_time"><p>'+creatTimeD+'</p><p>'+creatTimeT+'</p></div>'
+				+'<div class="billing_money">'
+					+'<p>运单号：<b>'+list[i].sourceNo+'</b></p>'
+					+'<p><span>'+list[i].incomeTypeName+'--</span>'+sourceName+'</p>'
+					+'<p>应收：'+list[i].receivableAmountName+'</p>'
+				+'</div>'
+				+'<div class="billing_price">'
+					+'<span>'+list[i].amountName+'</span>'
+					+'</div></a></li>';
+		}else if(list[i].fromlogType==2){
+			// html+='<li><a href="../ucenter/quote.html?order="'+list[i].sourceNo+'>'
+			html+='<li><a href="javascript:;">'
+				+'<div class="billing_time"><p>'+creatTimeD+'</p><p>'+creatTimeT+'</p></div>'
+				+'<div class="billing_money">'
+					+'<p>订单号：<b>'+list[i].sourceNo+'</b></p>'
+					+'<p><span>'+list[i].incomeTypeName+'--</span>'+sourceName+'</p>'
+					+'<p>应收：'+list[i].receivableAmountName+'</p>'
+				+'</div>'
+				+'<div class="billing_price">'
+					+'<span>'+list[i].amountName+'</span>'
+					+'</div></a></li>';
+		}
+		if (i==list.length-1) {
+			pageTimes=list[i].createTime;
+		};
+	};
+	load_flag=true;
+	if (list.length<1) {
+		$('.loading').html('已获取全部');
+		$('.loadOver').val('over');
+
+		return false;
+	}else{
+		if (!pageTime) {
+			$('.billing_bot').html(html);
+		}else{
+			$('.billing_bot').append(html);
+		};
+	};
+}
+
+/*时间插件*/
+$(function () {
+	var currYear = (new Date()).getFullYear();	
+	var opt={};
+	opt.date = {preset : 'date'};
+	opt.datetime = {preset : 'datetime'};
+	opt.time = {preset : 'time'};
+	opt.default = {
+		theme: 'android-ics light', //皮肤样式
+		display: 'bottom', //显示方式 
+		mode: 'scroller', //日期选择模式
+		dateFormat: 'yy-mm',
+		lang: 'zh',
+		showNow: true,
+		nowText: "本月",
+		startYear: currYear - 50, //开始年份
+		endYear: currYear //结束年份
+	};
+	$("#time").mobiscroll($.extend(opt['date'], opt['default']));
+});
+
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

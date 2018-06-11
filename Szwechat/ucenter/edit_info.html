@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#fff;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>编辑基本信息</title>
+	<link rel="stylesheet" href="../skin/css/main.css">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/areaSource.js"></script>
+	<script type="text/javascript" src="../skin/js/area.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/ucenter.js"></script>
+</head>
+<body style="background:#fff;">
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="consigner">
+	<div class="consigner_t">
+		<table class="w100">
+			<col width="28%">
+			<col width="72%">
+			<tr>
+				<td class="t_r f14">注册手机号:</td>
+				<td><input type="number" name="tel" readonly value="" class="hui"></td>
+			</tr>
+			<tr>
+				<td class="t_r f14"><span class="red">*</span>客 户 名 称:</td>
+				<td><input name="company" type="text" placeholder="请输入单位名称" onblur="noNull($(this),'单位名称')" value="" maxlength="50"></td>
+			</tr>
+			<tr>
+				<td class="t_r f14">联&#x3000;系&#x3000;人:</td>
+				<td><input name="name" type="text" placeholder="请输入联系人名称" value="" maxlength="30"></td>
+			</tr>
+			<tr>
+				<td class="t_r f14"><span class="red">*</span>地&#x3000;&#x3000;&#x3000;址:</td>
+				<td>
+					<span id="addr_aera" class="c999">选择所在省、市、区</span>
+					<!-- <input name="addrAera" id="addr_aera" type="text" placeholder="请输入公司地址" readonly onchange="noNull($(this),'公司地址')" value=""> -->
+					<input id="addr_value" type="hidden" name="addrAeraNum" value=""/>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input name="detail" type="text" placeholder="请输入详细地址" onblur="noNull($(this),'详细地址')" value="" maxlength="60"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="msg edit_info_msg"></div>
+</section>
+
+<footer>
+	<input class="footer_btn" type="button" value="确认" onclick="editInfoSubmit()">
+</footer>
+
+<script type="text/javascript">
+addr_aera2();
+$(document).ready(function() {
+	$.ajax({
+		url: api+'/api/wx/login/finduser',
+		type: 'POST',
+		dataType: 'json',
+		data: {id:userId,requestTokenId:requestTokenId()},
+		success:function(data){
+			if (data.success) {
+				var info=data.info;
+				// console.log(data);
+				$('[name="tel"]').val(info.tel);
+				$('[name="company"]').val(info.company);
+				$('[name="name"]').val(info.contact);
+				$('[name="addrAera"]').val(info.proName+' '+info.cityName+' '+info.areaName);
+				$('[name="addrAeraNum"]').val(info.proNumber+','+info.cityNumber+','+info.areaNumber);
+				$('[name="detail"]').val(info.detailed);
+			}else{
+				alert(data.message)
+			};
+		}
+	});
+
+
+});
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

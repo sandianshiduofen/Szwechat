@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" style="background:;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>注册信息</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+</head>
+<body>
+<nav class="login_nav">
+	<p class="current"><i></i><b></b><span>验证手机</span></p>
+	<p></p>
+	<p><i></i><b></b><span>维护信息</span></p>
+	<p></p>
+	<p><b></b><span>完成</span></p>
+</nav>
+<section class="login" id="login_tel">
+	<table class="login_table"> 
+		<col width="18%">
+		<col width="82%">
+		<tr>
+			<td class="login_icon"></td>
+			<td><input class="login_input tel" name="tel" type="number" oninput="if(value.length>11)value=value.slice(0,11);value=value.replace(/[^\d]/g,'')" placeholder="请输入手机号码" onblur="PhoneNo($(this))"></td>
+		</tr>
+		<tr>
+			<td class="login_icon login_icon2"></td>
+			<td>
+				<input class="login_input login_input2 yzm" name="code" oninput="if(value.length>6)value=value.slice(0,6)" type="number" placeholder="请输入手机验证码" onblur="verify($(this))">
+				<a class="gain" href="javascript:;" onclick="sub_tel($(this))">获取验证码</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="login_icon login_icon7"></td>
+			<td>
+				<input class="login_input" name="password"  type="password" placeholder="请输入6-16位数字和字母的密码" onblur="password($(this),'密码')" maxlength="16">
+			</td>
+		</tr>
+		<tr>
+			<td class="login_icon login_icon6"></td>
+			<td>
+				<input class="login_input" name="password2" type="password" placeholder="请重复输入您的密码" onblur="password2($(this))" maxlength="16">
+			</td>
+		</tr>
+	</table>
+	<div class="msg_w"><p class="msg"></p></div>
+	<div class="protocol_line">
+		<label><input checked="checked" type="checkbox" name="protocol"><span></span></label>
+		<b>阅读并同意</b><a href="javascript:$('.protocol_wrap').css('display', 'block');">《普通用户注册协议》</a>
+	</div>
+	<footer class="footer2">
+		<input class="footer_btn" type="button" value="下一步" onclick="telSubmit()">
+	</footer>
+</section>
+
+<div class="protocol_wrap" style="display:none">
+	<header class="header_box2">
+		<div class="header">
+			<div class="header_goback" onclick="protocolClose()">返回上一页</div>
+			<div class="header_title"  onclick="protocolClose()">返回</div>
+		</div>
+	</header>
+	<div class="protocol_cen">
+		<section class="protocol">
+		<h3>普通用户注册协议</h3>
+		<ul>
+			<li>欢迎使用三真车联平台服务！</li>
+			<li style="text-indent:0;font-size:0.14rem;color:#666;">一．	特别申明</li>
+			<li>三真车联平台由北京三真车联信息技术有限公司（以下简称：三真车联）经营并管理，本协议中的“三真车联平台”（以下简称：平台）是指域名为www.3zxg.com的三真商城网站、名称为“三真驿道”的移动端应用，以及与本公司业务相关的其他软件系统的单称或合称。您在注册平台用户时点击【同意】前，请务必认真阅读和理解本协议内规定的所有权利和限制。当您一旦注册、登录或以任何方式使用本协议所涉及的服务时，即表示您同意并接受本协议各项条款的约束，同时本协议将产生法律效力。</li>
+			<li style="text-indent:0;font-size:0.14rem;color:#666;">二．	用户注册</li>
+			<li>2.1在您开始注册并使用平台服务前，您应当具备中华人民共和国法律规定的与您行为相适应的民事行为能力。否则，您及您的监护人将依照法律规定承担因此而导致的一切后果。</li>
+			<li>2.2在使用平台服务时，您应按照平台页面的提示提供完整准确的个人信息（包括公司名称/联系人、电话、地址）以便平台或平台其它用户与您联系。</li>
+			<li>2.3您了解并同意，在注册账户后进行的一切行动、言论，负完全法律责任。</li>
+			<li style="text-indent:0;font-size:0.14rem;color:#666;">三．	服务内容</li>
+			<li>在您注册平台账户成功后，平台将向您提供以下服务： </li>
+			<li>3.1自助下运单（发货）服务</li>
+			<li>自助下运单功能是您向平台承运方发出物流送货需求最高效的途径。在您自助下单时请确保填写的收发货联系人、地址、电话完整准确，因填写错误造成的经济损失，您将自行承担全部责任。平台承运方在收寄、运送货物过程中有权对货物按照国家有关规定进行当场验视，如认为寄件人寄递货物为禁寄、限寄物品时有权自行处置，包括但不限于不予收寄、退还或依相关国家或地区的法律法规销毁等。寄递货物被平台依本条处置或被有关国家机关没收后，寄件人并不免除支付运费及其他费用的义务。</li>
+			<li>3.2收发货记录查询服务</li>
+			<li>收发货记录功能完整保存了您与您的客户实际发生的物流业务往来。平台支持您实时查看物流运输进度和运输状态。但平台仅对发布数据的准确性负责，当您与客户双方发生财务纠纷时，平台不承担任何责任。</li>
+			<li>3.3资金账户服务</li>
+			<li>在您注册成为平台用户后平台将为您免费开通资金账户功能。资金账户功能将为您提供专业的资金账户管理服务，为您在平台的业务往来钱款收入和自由支取提供保障。</li>
+			<li style="text-indent:0;font-size:0.14rem;color:#666;">四．	平台规则</li>
+			<li>4.1 平台运用自主研发系统通过互联网为您提供网络服务，在您使用本平台时，平台仅对您上传内容的表现方式做保护处理，如您上传的文件或信息侵犯他人的合法权益，您将自行承担相应的法律后果，平台在接到权利人被侵权通知后，有权采取删除、屏蔽、断开链接等必要措施，防止损失进一步扩大。在履行上述管理义务后平台不承担您侵权行为所产生的法律责任。</li>
+			<li>4.2 您在平台注册成功后，将得到一个账号和密码，在使用平台服务时帐号和密码需共同使用，并作为您成为平台用户的唯一身份标识。您应妥善保管帐号及密码安全，不得以任何形式擅自转让或授权他人使用。您需要对自己在账户中进行的所有活动和事件负全部责任，如果由于您的过失导致账号和密码脱离您的控制，由此对您及平台造成的损害，您应独立承担由此产生的一切法律责任。如平台发现或收到他人举报投诉您违反本协议约定的，平台有权不经通知随时对相关内容进行删除，屏蔽，并视情节严重程度对违规账号处以包括但不限于警告，限制或禁止使用部分或全部功能、账号封禁直至注销的处罚，并公告处理结果。</li>
+			<li>4.3 您在使用本平台服务过程中，必须遵循以下原则：</li>
+			<li>4.3.1 遵守中华人民共合国相关法律法规及社会公序良俗，不得为任何非法目的而使用本平台服务。</li>
+			<li>4.3.2 遵守所有与网络服务有关的网络协议、规定和程序，不得利用本平台进行任何可能对互联网正常运转造成不利影响的行为。</li>
+			<li>4.3.3 不得利用平台功能进行任何不利于本平台发展的言论传播及行为。</li>
+			<li>如您在使用网络服务时违反上述任何规定，本平台有权要求您改正或直接采取一切必要的措施(包括但不限于删除您发布的内容、暂停或终止您使用平台服务的权利)以减轻因您不当行为而造成的影响。</li>
+			<li>4.4本平台服务端是基于用户的地理位置提供服务功能，在您注册账户时应授权平台获取您的地理位置信息，注册成功即表明您同意平台获取、使用您的地理位置信息。</li>
+			<li>4.5平台为提升和改进网络服务，有权在未通知您的情况下升级系统版本。</li>
+			<li style="text-indent:0;font-size:0.14rem;color:#666;">五．	隐私保护</li>
+			<li>平台致力于保护您的个人资料不被外漏，且不在未经本人同意的情况下向第三者提供您的个人资料，但以下情况除外：</li>
+			<li>5.1 您同意让第三方共享个人信息。</li>
+			<li>5.2 您同意公开个人信息，享用因此得到的产品和服务。 </li>
+			<li>5.3 本平台为配合行政监管机关、司法机关执行工作，在法律规定的范围内有权向上述行政、司法机关提供您在使用本平台时所储存的相关信息，包括但不限于您的注册信息等。</li>
+			<li>5.4 为维护社会公序良俗或正当防卫、紧急避险等法定理由。</li>
+			<li style="text-indent:0;font-size:0.14rem;color:#666;">六．	结束服务</li>
+			<li>您或平台可随时根据实际情况中断一项或多项网络服务。您对之后的条款修改有异议，或对平台的服务不满，可以行使如下权利：</li>
+			<li>1．停止使用平台提供的网络服务。</li>
+			<li>2. 通告平台停止向您继续提供服务。</li>
+			<li>在您终止普通用户服务协议时，平台会将您升级后的用户角色所承载的服务功能一并关闭，请慎重选择关停普通用户服务。</li>
+			<li>结束服务后，您在平台的使用权将即刻终止。终止后，您没有权利，平台也没有义务向您继续推送任何未处理的信息或未结束的服务。</li>
+		</ul>
+	</section>
+	<footer class="footer2">
+		<a class="footer_btn" href="javascript:;" value="" onclick="protocolSelect()">我知道了</a>
+	</footer>
+	</div>
+</div>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>
+

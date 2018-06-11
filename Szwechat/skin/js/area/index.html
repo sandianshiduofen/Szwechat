@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta content="telephone=no" name="format-detection">
+    <title>城市选择</title>
+    <link rel="stylesheet" type="text/css" href="css/mui.picker.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mui.css"/>
+    <style>
+    	*{font-size:14px;}
+		p{text-align:center;background:#f00;padding:10px 0;margin:20px 0 0 0; color:#fff;}
+    </style>
+    <script src="js/jquery.min.js"></script>
+</head>
+<body>
+<p id="city_text">选择省市区</p>
+<input type="text" id="city_id" />
+</body>
+<script src="js/mui.min.js"></script>
+<script src="js/mui.picker.min.js"></script>
+<script src="js/areaSource.js"></script>
+<!-- <script src="js/data.city.js"></script> -->
+<script>
+	//选择省市区
+	var city_picker = new mui.PopPicker({layer:3});
+	city_picker.setData(provs);
+	$("#city_text").on("tap", function(){
+		setTimeout(function(){
+			city_picker.show(function(items){
+				$("#city_id").val((items[0] || {}).value + "," + (items[1] || {}).value + "," + (items[2] || {}).value);//该ID为接收城市ID字段
+				$("#city_text").html((items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text);
+			});
+		},200);
+	});
+</script>
+</html>

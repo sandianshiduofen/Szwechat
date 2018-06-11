@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" style="background:;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>自助下单</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=2">
+	<link rel="stylesheet" type="text/css" href="../skin/js/area/css/mui.picker.css?v=2"/>
+    <script src="../skin/js/area/js/mui.min.js?v=2"></script>
+	<script src="../skin/js/area/js/mui.picker.min.js?v=2"></script>
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/areaSource.js?v=2"></script>
+	<script type="text/javascript" src="../skin/js/artTemplate.js?v=2"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.0&key=95596fede2fcca4aa69d161f5c238e22"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=2"></script>
+	<script type="text/javascript" src="../skin/js/help_self.js?v=3"></script>
+</head>
+<body>
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="selfHeaderGoback()">返回上一页</div>
+		<div class="header_title"  onclick="selfHeaderGoback()">返回</div>
+	</div>
+</header>
+<section class="login">
+<form id="selfHelpOrder">
+	<input type="hidden" name="senderId">
+	<input type="hidden" name="senderRegisterMobile">
+	<input type="hidden" name="receiverRegisterMobile">
+	<input type="hidden" name="receiverRegisterCompany">
+	<input type="hidden" name="receiverId">
+	<input type="hidden" name="waybillSource" value="1">
+	<div class="addr_book">
+		<table class="w100">
+			<colgroup>
+				<col width="18px">
+				<col width="57px">
+				<col width="25px">
+			</colgroup>
+			<tbody>
+				<tr>
+					<td class="addr_icon">
+						<input type="hidden" name="consigner" value="">
+					</td>
+					<td class="addr_edit consigner_edit">
+						<div class="consigner_input">
+							<input type="hidden" name="senderAddId" value="">
+							<input type="hidden" name="senderAddIsDf" value="">
+							<input type="hidden" name="senderName" value="">
+							<input type="hidden" name="senderLinkman" value="">
+							<input type="hidden" name="senderMobile" value="">
+							<input type="hidden" name="senderProvinceName" value="">
+							<input type="hidden" name="senderCityName" value="">
+							<input type="hidden" name="senderAreaName" value="">
+							<input type="hidden" name="senderProvinceId" value="">
+							<input type="hidden" name="senderCityId" value="">
+							<input type="hidden" name="senderAreaId" value="">
+							<input type="hidden" name="senderAddress" value="">
+						</div>
+						<a href="javascript:;" onclick="selfConsigner()">输入发货人的联系方式和详细信息</a>
+					</td>
+					<td><a class="addr_book_btn addr_book_btn2" href="javascript:;" onclick="selfConsignerBook()">地址簿</a></td>
+				</tr>
+				<tr>
+					<td class="addr_icon addr_icon2">
+						<input type="hidden" name="delivery" value="">
+					</td>
+					<td class="addr_edit delivery_edit" id="addr_delivery" data-add="2">
+						<div class="delivery_input">
+							<input type="hidden" name="receiverName" value="">
+							<input type="hidden" name="receiverLinkman" value="">
+							<input type="hidden" name="receiverMobile" value="">
+							<input type="hidden" name="receiverProvinceName" value="">
+							<input type="hidden" name="receiverCityName" value="">
+							<input type="hidden" name="receiverAreaName" value="">
+							<input type="hidden" name="receiverProvinceId" value="">
+							<input type="hidden" name="receiverCityId" value="">
+							<input type="hidden" name="receiverAreaId" value="">
+							<input type="hidden" name="receiverAddress" value="">
+						</div>
+						<a href="javascript:;" onclick="selfDelivery()">输入收货人的联系方式和详细信息</a>
+					</td>
+					<td><a class="addr_book_btn" href="javascript:;" onclick="selfDeliveryBook()">地址簿</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="goods_info">
+		<table class="w100 goods_info_t">
+			<col width="33%">
+			<col width="33%">
+			<col width="33%">
+			<tbody>
+				<tr>
+					<td><p><span class="red">*</span>货物信息:</p></td>
+					<td colspan="2"><input class="goods_input" type="text" name="goodsName" placeholder="请填写货物名称" maxlength="50" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\,\，\-\_\=\+\#\|\*\+\.\。\、\？\/\!\！]/g,'')"></td>
+				</tr>
+				<tr>
+					<td><p><span class="red">*</span>货物件数:</p></td>
+					<td colspan="2" class="goods_num">
+						<div class="f_r">
+							<span id="reduce" onclick="reduce($(this))"></span>
+							<input class="tiny parcel_num" name="goodsQuantity" type="number" value="1" onchange="num_change($(this))" oninput="self_btn_show()">
+							<span id="increase"  onclick="increase($(this))"></span>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="have_dai">
+			<table class="w100 goods_info_t goods_info_c">
+				<col width="33%">
+				<col width="33%">
+				<col width="33%">
+				<tbody>
+					<tr class="have_dai_l">
+						<td><h5>增值服务</h5>
+							<label class="price_open2"><input class="pay_way pay_pop pay_way2 collection" type="checkbox" name="collection" value="1"><span><b></b></span>代收货款</label>
+						</td>
+						<td colspan="2"><span class="have_coll_a"><b>¥</b><input type="text" class="have_coll" name="have_coll" id="have_coll" readonly placeholder="代收货款金额最低为2元"><input type="hidden" name="goodsAmount" value="0" readonly></span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- <div class="have_dai">
+			<table class="w100 goods_info_t goods_info_c">
+				<col width="33%">
+				<col width="33%">
+				<col width="33%">
+				<tbody>
+					<tr class="pay_way_t">
+						<td class="td_title">
+							<h5><span class="red">*</span>运费付款方式<span class="red">*</span></h5>
+							<label><input class="pay_way payment" type="radio" name="payType" value="1"><span><b></b></span>寄方付</label>
+						</td>
+						<td>
+							<label><input class="pay_way payment" type="radio" name="payType" value="2" checked><span><b></b></span>收方付</label>
+						</td>
+						<td><label><input class="pay_way payment" type="radio" name="payType" value="3"><span><b></b></span>回单付</label></td>
+					</tr>
+				</tbody>
+			</table>
+		</div> -->
+		<div class="nearby"></div>
+	</div>
+</form>
+</section>
+<footer class="footer2 footer_self">
+	<input class="footer_btn hui" id="protocolT" type="button" value="提交运单" onclick="self_submit()">
+</footer>
+
+<div class="receive_pop_w protocol_w">
+	<div class="receive_pop">
+		<div class="receive_pop_c protocol_pop_c">
+			<div class="uc_cou_bot">
+				<div class="protocol_tit">货物运输协议
+					<span onclick="protocol_close()"></span>
+				</div>
+				<div class="carefully">请您认真阅读《货物运输协议》，点击【同意】即视为您接受并签署本协议。</div>
+				<div class="uc_cou_con protocol_con">
+					<div class="clear"></div>
+					<div class="protocol_c">
+						<div class="protocol_p">
+							<p class="text_indent2">甲方：  实际承运服务的单位或个人</p>
+							<p class="text_indent2">乙方：  托运货物的单位或个人</p>
+							<p class="text_indent2">丙方：  北京三真车联信息技术有限公司</p>
+							<br>
+							<p class="text_indent2">依中华人民共合国《合同法》及《邮政法》相关规定，甲\乙\丙三方就<< 货物运输协议>>事宜达成如下约定：</p>
+							<p>一、	甲方权利和义务：  </p>
+							<p class="p_l2">1.	甲方判定托运货物外包装简陋存在安全隐患的，有权要求乙方加强托运货物包装；</p>
+							<p class="p_l2">2.	甲方无法送达的货物有权拒绝收货；</p>
+							<p class="p_l2">3.	甲方对运费收费标准有最终解释权； </p>
+							<p class="p_l2">4.	甲方需按约定时间内将货物安全送达乙方指定收货地点并交付给收货人；</p>
+							<p class="p_l2">5.	甲方需对货物的安全和货物完好负责，因甲方原因造成货物损坏、丢失的，应按照协议约定承担赔偿责任；</p>
+							<p>二、	乙方权利和义务：</p>
+							<p class="p_l2">1.	乙方自主选择甲方提供的服务；</p>
+							<p class="p_l2">2.	因甲方责任引发货物损坏、丢失，乙方按协议约定主张货物赔偿的权利；</p>
+							<p class="p_l2">3.	乙方必须如实、准确填写托运单，因乙方填写错误造成退货或配送不到的，由乙方承担相应责任；</p>
+							<p class="p_l2">4.	按国家法律规定，乙方所发货物不得夹带国家违禁货物，如因夹带造成损失的由乙方全额承担赔偿责任。造成其他事故的，由乙方承担相应的法律责任；</p>
+							<p class="p_l2">5.	乙方所发货物需提供完好包装，易碎货物需进行加固包装，因包装不当造成的货物损坏由乙方自行承担；</p>
+							<p>三、	丙方权利和义务：  </p>
+							<p class="p_l2">1.	丙方在乙方与甲方货物托运业务中提供代收代付服务和财务结算服务；</p>
+							<p class="p_l2">2.	丙方承担乙方在丙方系统内注册账号资金安全、财务结算及时准确的义务；</p>
+							<p class="p_l2">3.	丙方承担乙方在丙方系统内注册账号账实相符并提供对账凭证的义务；</p>
+							<p class="p_l2">4.	丙方承担乙方在丙方系统内个人或单位注册及发货信息保密的义务；</p>
+							<p class="p_l2">5.	如因丙方原因造成乙方货款损失的，由丙方赔偿乙方。</p>
+							<p>四、代收货款结算：</p>
+							<p class="p_l2 text_indent2">代收货款结算：收货方签收托运货物并支付货款成功后，丙方按乙方与甲方约定的服务费率扣除服务费，余下货款实时打入乙方在丙方平台系统内注册的资金账户系统保护期账户中，保护期账户按银行结算时效自动转入乙方可用余额账户，乙方可实时提现。</p>
+							<p>五、	赔偿责任：</p>
+							<p class="p_l2 text_indent2">甲方运输过程中造成货物损坏、丢失，应承担赔偿责任。赔偿金额最高为损坏、丢失货物运费金额的3—5倍。</p>
+							<p class="p_l2 text_indent2">因收货方原因造成的货品未正常签收，甲方有告知乙方的义务。告知乙方后，甲方仅提供揽货后15天内免费存放服务，15天后甲方可收取保管费或在告知乙方后对货物进行自行处理。</p>
+							<p class="p_l2 text_indent2">因发生自然灾害等不可抗力造成货物无法按期运达目的地时，甲方应及时通知乙方并协商解决，因延迟送达乙方产生损失，甲方不承担责任。如甲方未主动告知乙方，乙方损失均由甲方承担。</p>
+							<p>六、	纠纷处理方式：</p>
+							<p class="p_l2 text_indent2">乙方和甲方发生货物运输纠纷的，以协商的方式解决，协商未果时，任何一方有权向甲方所在地人民法院提起诉讼。</p>
+							<p class="p_l2 text_indent2">乙方和丙方发生账款纠纷的，以协商的方式解决，协商未果时，任何一方有权向丙方所在地人民法院提起诉讼。</p>
+						</div>
+					</div>
+					<footer>
+						<input class="footer_btn" id="selfSubmit" type="button" value="确定" onclick="auto_help_ok()">
+					</footer>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 发货添加编辑 -->
+<script id="self_fa_edit" type="text/html">
+	<div class="self_help_w self_fa_edit">
+		<header class="header_self header_self_a">
+			<div class="header">
+				<div class="header_goback" onclick="selfShouEdit($(this))">返回上一页</div>
+				<div class="header_title"  onclick="selfShouEdit($(this))">关闭</div>
+			</div>
+		</header>
+		<div class="self_help_t" style="background:#fff;">
+			<div class="self_help_c">
+				<section class="consigner">
+					<div class="consigner_t">
+						<table class="w100">
+							<col width="25%">
+							<col width="75%">
+							<tr>
+								<td class="t_r f14"><span class="red">*</span>发&nbsp; 货&nbsp; 方:</td>
+								<td><input name="client" type="text" placeholder="请输入单位名称" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\(\)\（\）\,\，\-\_\=\+\#\|\*\+\.\。\、\？\/\!\！]/g,'');noNullfa($(this),'单位名称')" maxlength="50"></td>
+							</tr>
+							<tr>
+								<td class="t_r f14">联&nbsp; 系&nbsp; 人:</td>
+								<td><input name="name" type="text" placeholder="请输入联系人姓名" maxlength="20" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');nameLen(value)"  onblur=""></td>
+							</tr>
+							<tr>
+								<td class="t_r f14"><span class="red">*</span>电&#x3000;&#x3000;话:</td>
+								<td><input name="tel" type="number" placeholder="请输入手机号或固话"  onblur="telNo($(this))" oninput="if(value.length>12)value=value.slice(0,12)"></td>
+							</tr>
+							<tr>
+								<td class="t_r f14"><span class="red">*</span>发货地址:</td> 
+								<td>
+									<span id="addr_aera" class="c999">选择所在省、市、区</span>
+									<input id="addr_value" name="aeraNum" type="hidden" value="" onchange="noNull($(this),'所在省、市、区')"/>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><input name="detail" type="text" placeholder="请输入详细地址" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\,\，\-\_\=\+\#\|\*\+\.\。\、\？\/\!\！]/g,'');noNullfa($(this),'详细地址')" maxlength="50"></td>
+							</tr>
+						</table>
+					</div>
+					<div class="msg consigner_msg"></div>
+					<div class="tacitly_approve">
+						<!-- <label><input type="checkbox" name="addBook"><span class="checkbox"></span><b id="">添加到发货方地址簿</b></label> -->
+					</div>
+				</section>
+				<footer class="footer2">
+					<input class="footer_btn selfShipSubmit" type="button" value="确认" onclick="selfShipSubmit()">
+				</footer>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 收货添加编辑 -->
+<script id="self_shou_edit" type="text/html">
+	<div class="self_help_w self_shou_edit">
+		<header class="header_self  header_self_a">
+			<div class="header">
+				<div class="header_goback" onclick="selfShouEdit($(this))">返回上一页</div>
+				<div class="header_title"  onclick="selfShouEdit($(this))">关闭</div>
+			</div>
+		</header>
+		<div class="self_help_t" style="background:#fff;">
+			<div class="self_help_c">
+				<section class="consigner">
+					<div class="consigner_t">
+						<table class="w100">
+							<col width="25%">
+							<col width="75%">
+							<tr>
+								<td class="t_r f14"><span class="red">*</span>收&nbsp; 货 方:</td>
+								<td><input name="client" type="text" placeholder="请输入单位名称" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\(\)\（\）\,\，\-\_\=\+\#\|\*\+\.\。\、\？\/\!\！]/g,'');noNullfa($(this),'单位名称')" maxlength="50"></td>
+							</tr>
+							<tr>
+								<td class="t_r f14">联&nbsp; 系 人:</td>
+								<td><input name="name" type="text" placeholder="请输入联系人姓名" maxlength="20" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');nameLen(value)"></td>
+							</tr>
+							<tr>
+								<td class="t_r f14"><span class="red">*</span>电&#x3000;&#x3000;话:</td>
+								<td><input name="tel" type="number" placeholder="请输入手机号或固话"  onblur="telNo($(this))" oninput="if(value.length>12)value=value.slice(0,12)"></td>
+							</tr>
+							<tr>
+								<td class="t_r f14"><span class="red">*</span>收货地址:</td>
+								<td>
+									<span id="addr_aera" class="c999">选择所在省、市、区</span>
+									<input id="addr_value" name="aeraNum" type="hidden" value=""/>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><input name="detail" type="text" placeholder="请输入详细地址" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\,\，\-\_\=\+\#\|\*\+\.\。\、\？\/\!\！]/g,'');noNullfa($(this),'详细地址')" maxlength="50"></td>
+							</tr>
+						</table>
+					</div>
+					<div class="msg consigner_msg"></div>
+					<!-- <div class="tacitly_approve">
+						<label><input type="checkbox" name="default"><span class="checkbox"></span><b id="">设为默认收货方</b></label>
+					</div> -->
+				</section>
+
+				<footer class="footer2">
+					<input class="footer_btn selfRedSubmit" type="button" value="确认" onclick="selfRedSubmit()">
+				</footer>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 发货地址薄 -->
+<script id="self_fa_book" type="text/html">
+	<div class="self_help_w self_fa_book">
+		<header class="header_self  header_self_a">
+			<div class="header">
+				<div class="header_goback" onclick="selfFaEdit($(this))">返回上一页</div>
+				<div class="header_title"  onclick="selfFaEdit($(this))">关闭</div>
+			</div>
+		</header>
+		<div class="self_help_t">
+			<div class="self_help_c">
+				<section class="send_receive">
+					<div class="send_search ship_search">
+						<input class="search_input" type="search" placeholder="发货方、电话"  onkeyup="sendKeysEnt()">
+						<a href="javascript:;" class="search_btn" onclick="selfAddrsearch()"></a>
+					</div>
+					<div class="record_list" id="record_list"></div>
+					<div class="atmb_page" id="Pagination" style="text-align: center;padding-top:0.1rem;"></div>
+				</section>
+				<footer>
+					<input class="footer_btn add_fa_edit add_fa_btn" type="button" value="新增发货地址" onclick="addFaEdit()">
+				</footer>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 收货地址薄 -->
+<script id="self_shou_book" type="text/html">
+	<div class="self_help_w self_shou_book">
+		<header class="header_self  header_self_a">
+			<div class="header">
+				<div class="header_goback" onclick="selfShouEdit($(this))">返回上一页</div>
+				<div class="header_title"  onclick="selfShouEdit($(this))">关闭</div>
+			</div>
+		</header>
+		<div class="self_help_t">
+			<div class="self_help_c">
+				<section class="send_receive">
+					<div class="send_search ship_search">
+						<input class="search_input" type="search" placeholder="收货方、电话" onkeyup="recKeysEnt()">
+						<a href="javascript:;" class="search_btn" onclick="selfAddrShouSearch()"></a>
+					</div>
+					<div class="record_list" id="record_list"></div>
+					<div class="atmb_page" id="Pagination" style="text-align: center;padding-top:0.1rem;"></div>
+				</section>
+				<footer>
+					<input class="footer_btn add_shou_edit add_fa_btn" type="button" value="新增收货地址" onclick="addshouEdit()">
+				</footer>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!-- 收货添加编辑 -->
+<script id="self_shou_add" type="text/html">
+	<div class="self_help_w self_shou_add">
+		<header class="header_self  header_self_a">
+			<div class="header">
+				<div class="header_goback" onclick="selfShouEdit($(this))">返回上一页</div>
+				<div class="header_title"  onclick="selfShouEdit($(this))">关闭</div>
+			</div>
+		</header>
+		<div class="self_help_t" style="background:#fff;">
+			<div class="self_help_c">
+				<section class="consigner">
+					<div class="consigner_t">
+					<input type="hidden" name="registerTelLin">
+					<input type="hidden" name="registerConLin">
+					<input type="hidden" name="receiverIdLin">
+						<table class="w100">
+							<col width="25%">
+							<col width="75%">
+							<tr>
+								<td class="t_r f14"><span class="red">*</span>电&#x3000;&#x3000;话:</td>
+								<td><input name="tel" type="number" placeholder="请输入手机号或固话" onfocus="popping(value)"  onblur="telNo($(this))" oninput="if(value.length>12)value=value.slice(0,12)"><a href="javascript:;" class="searchClient" onclick="shouTelSearch()">搜索</a></td>
+							</tr>
+							<tr>
+								<td class="t_r f14"><span class="red">*</span>收&nbsp; 货 方:</td>
+								<td><input name="client" type="text" placeholder="请输入单位名称" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\(\)\（\）\,\，\-\_\=\+\#\|\*\+\.\。\、\？\/\!\！]/g,'');noNullfa($(this),'单位名称')" maxlength="50"></td>
+							</tr>
+							<tr>
+								<td class="t_r f14">联&nbsp; 系 人:</td>
+								<td><input name="name" type="text" placeholder="请输入联系人姓名" maxlength="20" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');nameLen(value)"></td>
+							</tr>
+							<tr>
+								<td class="t_r f14"><span class="red">*</span>收货地址:</td>
+								<td>
+									<span id="addr_aera" class="c999">选择所在省、市、区</span>
+									<input id="addr_value" name="aeraNum" type="hidden" value=""/>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><input name="detail" type="text" placeholder="请输入详细地址" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\,\，\-\_\=\+\#\|\*\+\.\。\、\？\/\!\！]/g,'');noNullfa($(this),'详细地址')" maxlength="50"></td>
+							</tr>
+						</table>
+					</div>
+					<div class="msg consigner_msg"></div>
+				</section>
+
+				<footer class="footer2">
+					<input class="footer_btn selfRedSubmit" type="button" value="确认" onclick="selfRedSubmit()">
+				</footer>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="self_shou_list" type="text/html">
+	<div class="self_help_w self_shou_list" style="background:#f5f5f5">
+		<header class="header_self  header_self_a">
+			<div class="header">
+				<div class="header_goback" onclick="selfShouEdit($(this))">返回上一页</div>
+				<div class="header_title"  onclick="selfShouEdit($(this))">关闭</div>
+			</div>
+		</header>
+		<div class="self_help_t" style="top:0">
+			<p class="findNum">共搜索出<span></span>个客户信息</p>
+			<ul>
+				{{each info}}
+				<li>
+					<p><b>客户名称：</b>{{$value.guestName}}</p>
+					<p><b>联 系 人：</b>{{$value.linkman}}</p>
+					<p><b>电&#x3000;&#x3000;话：</b>{{$value.tel}}</p>
+					<p><b>地&#x3000;&#x3000;址：</b>{{$value.provinceName}} {{$value.cityName}} {{$value.areaName}} {{$value.address}}</p>
+					<span onclick='clientele({guestName:"{{$value.guestName}}",linkman:"{{$value.linkman}}",tel:"{{$value.tel}}",provinceName:"{{$value.provinceName}}",cityName:"{{$value.cityName}}",areaName:"{{$value.areaName}}",address:"{{$value.address}}",provinceId:"{{$value.provinceId}}",areaId:"{{$value.areaId}}",cityId:"{{$value.cityId}}",registerMobile:"{{$value.registerMobile}}",receiverId:"{{$value.guestNo}}"})'>选择</span>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div> 
+</script>
+<style type="text/css">
+	.self_help_w{right:-100%;}
+</style>
+<script type="text/javascript">
+$(function() {
+	requestTokenInput();
+});
+$('body').on('click', '.self_fa_book [type="radio"]', function(event) {
+	var _self=$(this);
+	if (_self.attr('checked')) {
+		var id=_self.parents('.record_li').attr('data-id');
+		$.ajax({
+			url: apiL+'/api/wx/sender/setdefault',
+			type: 'post',
+			dataType: 'json',
+			data: {userId:userId(),id:id,requestTokenId:requestTokenId()},
+			success:function(data){
+				if (data.success) {
+					if (id==$('[name="senderAddId"]').val()) {
+						$('[name="senderAddIsDf"]').val('1');
+					}else{
+						$('[name="senderAddIsDf"]').val('0');
+					};
+					_self.parents('.record_li').siblings('.record_li').find('.moren').children('span').remove();
+					var find=_self.parents('.record_li').siblings('.record_li');
+					$(find).each(function(index, el) {
+						if (!$(el).find('.ship_moren').html()) {
+							$(el).find('.ship_moren').html('<input type="radio" name="default"><span class="radio"></span>设置为默认发货方')
+						};
+					});
+					_self.parents('.show_details').siblings('table').find('.moren').html('<span class="red">默认发货</span>');
+					_self.parents('.ship_moren').html('');
+				}else{
+					alert(data.message)
+				};
+			}
+		});
+	};
+});
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

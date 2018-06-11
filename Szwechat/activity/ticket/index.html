@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>活动</title>
+	<style type="text/css">
+	body, ul, ol, dl, dd, h1, h2, h3, h4, h5, h6, form, input,p, blockquote, table, th, td{ margin: 0; padding: 0; resize: none; list-style: none;}
+	html { background: #efeff4; font-size: 100px; max-width: 1080px;margin: 0 auto;}
+	body { color: #555; line-height: 1; background: #ffbb22; -webkit-touch-callout: none; user-select: none; font-size: 0.12rem; font-family: tahoma,Helvetica, Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "\5FAE\8F6F\96C5\9ED1";}
+	table { border-collapse: collapse; border-spacing: 0;}
+	img {border: none;display:block;}
+	img, object, select, input, textarea, button { vertical-align: middle; box-sizing: content-box; }
+	input, textarea, select, address, em, i, b, strong, th, button{ font-style: normal; text-decoration: none; }
+	input, textarea, select, button { -webkit-appearance: none; -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2); -moz-appearance:none;appearance:none;}
+	a { text-decoration: none; cursor: pointer; color: #555; }
+	a:hover, a:focus { outline: none; }
+	::-webkit-scrollbar { width: 0; } 
+
+	.common{width:100%;}
+	.w100 img{width:100%;height:auto;}
+	.count{position: relative;background: url(images/countdown.jpg) 0 0 no-repeat;-webkit-background-size: 100% auto;background-size: 100% auto;margin-bottom:0.1rem;}
+	.countCon{width:86%;border-radius:0.1rem;padding:2%;margin:0 auto;
+		background: -webkit-linear-gradient(#ffbb22, #e40a40);
+		background: -o-linear-gradient(#ffbb22, #e40a40);
+		background: -moz-linear-gradient(#ffbb22, #e40a40);
+		background: linear-gradient(#ffbb22, #e40a40);}
+	.countDown{height:0.4rem;line-height: 0.4rem;text-align: center;font-size:0.16rem;margin-bottom:0.05rem;color:#fff;}
+	.countDown span{font-size:0.22rem;background: #4a4a4a;border-radius:5px;display:inline-block;width:0.34rem;text-align: center;}
+	.addUp{background: #fff;border-radius:8px;color:#4a4a4a;text-align: center;}
+	.sumMount{font-size:0.18rem;padding:0.05rem 0;}
+	.sumMount span{font-size:0.3rem;color:#eb1a4f;}
+	.addUp p{font-size:0.14rem;line-height: 0.2rem;padding-bottom:0.05rem;}
+
+	@media screen and (max-width: 360px) {
+	    .countDown{font-size:14px;height:0.3rem;line-height: 0.3rem;}
+	    .countDown span{font-size:0.18rem;width:0.26rem;}
+	    .sumMount{font-size:0.16rem;}
+	    .sumMount span{font-size:0.24rem;}
+	    .addUp p{font-size:0.12rem;line-height: 0.16rem;}
+	}
+	#mb_btn_ok_a{background: #fff !important;font-size:0.14rem !important;}
+	.loadingZhuan{position: fixed;left:0;top: 0;top: 0;bottom: 0;right: 0;background: rgba(0,0,0,0.1);z-index: 100;}
+	.loadingZ{position: fixed;height:0.7rem;width:1rem;background: rgba(0,0,0,0.7);left:50%;margin-left:-0.5rem;top:50%;margin-top:-0.5rem;border-radius:3px;padding:0.15rem 0;}
+	.loadingZ img{width:0.4rem;display:block;margin:0 auto;}
+	.loadingZ p{text-align: center;color:#fff;line-height: 0.3rem;font-size:0.14rem;}
+
+
+	</style>
+</head>
+<body>
+	<div class="banner common w100">
+		<img src="images/banner-ticket.jpg" alt="焦点图">
+	</div>
+	<div class="count common w100">
+		
+		<div class="countCon">
+			<div class="countDown" id="timer">距活动结束：<span>00</span> 天 <span>00</span> 时 <span>00</span> 分 <span>00</span> 秒</div>
+			<div class="addUp">
+				<div class="sumMount" id="sumMount"><b>累计运费：</b><span>0</span>元</div>
+				<p id="reminder">还差100元，获得30元运费券，赶快使用三真驿道吧！</p>
+			</div>
+		</div>
+	</div> 
+
+	<div class="common w100">
+		<img src="images/explain.jpg" alt="活动说明">
+	</div>
+
+	<div class="common w100">  
+		<img src="images/regulation.jpg" alt="活动细则">
+	</div>
+
+<script type="text/javascript" src="../../skin/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../skin/js/pop_up.js"></script>
+<script type="text/javascript" src="../../skin/js/config.js"></script>
+<script language="javascript" type="text/javascript">
+var api=apiLsc;
+var currentTime;
+var number=GetQueryString('number');
+if (number) {
+	loading('加载中...'); 
+	$.ajax({
+		url: api+'/api/wx/login/findActivity_v1',
+		type: 'POST',
+		dataType: 'json',
+		timeout:10000,
+		data: {acCode:'001',requestTokenId:requestTokenId()},
+		success:function(data){
+			if (data.success) {
+				var info=data.info||{}
+				console.log(data)
+				var startTime=info.startTime;
+				currentTime=info.currentTime;
+				var endTime=info.endTime;
+				var endTimeN = new Date();
+				endTimeN.setTime(endTime);
+				var endTimeShow=endTimeN.format('yyyy,MM,dd,h,m,s');
+				var endTimeShowEnd=endTimeShow.split(',')
+				if (startTime&&endTime) {
+					leftTimer(endTimeShowEnd[0],endTimeShowEnd[1],endTimeShowEnd[2],endTimeShowEnd[3],endTimeShowEnd[4],endTimeShowEnd[5])
+					var timer=setInterval('leftTimer('+endTimeShowEnd[0]+','+endTimeShowEnd[1]+','+endTimeShowEnd[2]+','+endTimeShowEnd[3]+','+endTimeShowEnd[4]+','+endTimeShowEnd[5]+')',1000);
+					sumFreight(startTime,endTime)
+				};
+			}else{ 
+		    	$.MsgBox.Alert(data.message,'确定');
+			};
+		},
+		complete : function(XMLHttpRequest,status){
+			loadingRemove();
+		    if(status=='error'||status=='timeout'){
+		    	$.MsgBox.Alert('信息请求失败，请刷新重试','确定');
+		    }
+		}
+	});
+}else{
+	$.MsgBox.Alert('获取用户信息失败','确定');
+};
+
+function sumFreight(startTime,endTime){
+	loading('加载中...'); 
+	$.ajax({
+		url: apiTms+'/api/wx/waybill/freight/sum',
+		type: 'POST',
+		timeout:10000,
+		dataType: 'json',
+		data: {guestNo:number,startTime:startTime,endTime:endTime,requestTokenId:requestTokenId()},
+		success:function(data){
+			if (data.success) {
+				var info=data.info||{};
+				var sumFreightAmount=info.sumFreightAmount;
+				$('#sumMount span').html(sumFreightAmount)
+				var reminder='';
+				if (sumFreightAmount<100) {
+					var subtract=100-sumFreightAmount;
+					reminder ='还差'+subtract+'元，获得30元运费券，赶快使用三真驿道吧！'
+				}else if(sumFreightAmount>=100 && sumFreightAmount<300){
+					var subtract=300-sumFreightAmount;
+					reminder ='还差'+subtract+'元，获得80元运费券，赶快使用三真驿道吧！'
+				}else if(sumFreightAmount>=300 && sumFreightAmount<500){
+					var subtract=500-sumFreightAmount;
+					reminder ='还差'+subtract+'元，获得200元运费券，赶快使用三真驿道吧！'
+				}else{
+					reminder ='恭喜您已满500元，送您200元运费券，<br>我们将在2017-12-26统一发放'
+				};
+				$('#reminder').html(reminder);
+			}else{
+				$.MsgBox.Alert(data.message,'确定');
+			};
+		},
+		complete : function(XMLHttpRequest,status){
+			loadingRemove();
+		    if(status=='error'||status=='timeout'){
+		    	$.MsgBox.Alert('信息请求失败，请刷新重试','确定');
+		    }
+		}
+	});
+}
+
+
+function leftTimer(year,month,day,hour,minute,second){
+	//var leftTime = (new Date(year,month-1,day,hour,minute,second)) - (new Date()); //计算剩余的毫秒数 
+	var leftTime = (new Date(year,month-1,day,hour,minute,second)) - currentTime; //计算剩余的毫秒数 
+	currentTime=currentTime+1000;
+	var days = parseInt(leftTime / 1000 / 60 / 60 / 24 , 10); //计算剩余的天数 
+	var hours = parseInt(leftTime / 1000 / 60 / 60 % 24 , 10); //计算剩余的小时 
+	var minutes = parseInt(leftTime / 1000 / 60 % 60, 10);//计算剩余的分钟 
+	var seconds = parseInt(leftTime / 1000 % 60, 10);//计算剩余的秒数  
+	if (days<=0) {
+		days=0;
+	};
+	if (hours<=0) {
+		hours=0;
+	};
+	if (minutes<=0) {
+		minutes=0;
+	};
+	if (seconds<=0) {
+		seconds=0;
+	};
+	days = checkTime(days);
+	hours = checkTime(hours);
+	minutes = checkTime(minutes);
+	seconds = checkTime(seconds);
+	if (days<=0 & hours<=0 & minutes<=0  & seconds<=0 ) {
+		clearTimeout(timer)
+		document.getElementById("timer").innerHTML = "活动已结束"
+	}else{
+		document.getElementById("timer").innerHTML ="距活动结束：<span>"+days+"</span> 天 <span>"+hours+"</span> 时 <span>"+minutes+"</span> 分 <span>"+seconds+"</span> 秒"; 
+	};
+}
+function checkTime(i){
+	if(i<10) { 
+		i = "0" + i; 
+	} 
+	return i; 
+}
+
+
+function requestTokenId(num){
+	len =num||32;
+　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+　　var maxPos = $chars.length;
+　　var pwd = '';
+　　for (i = 0; i < len; i++) {
+　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+　　}
+	return 'wx_tms_'+pwd;
+}
+
+
+/*时间转换*/
+Date.prototype.format = function(format) {
+	var date = {
+		"M+": this.getMonth() + 1,
+		"d+": this.getDate(),
+		"h+": this.getHours(),
+		"m+": this.getMinutes(),
+		"s+": this.getSeconds(),
+		"q+": Math.floor((this.getMonth() + 3) / 3),
+		"S+": this.getMilliseconds()
+	};
+	if (/(y+)/i.test(format)) {
+	  	format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+	}
+	for (var k in date) {
+		  if (new RegExp("(" + k + ")").test(format)) {
+		        format = format.replace(RegExp.$1, RegExp.$1.length == 1
+		                ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+		  }
+	}
+	return format;
+};
+/*获取链接参数*/
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+// 加载
+function loading(text){
+	var html='<div class="loadingZhuan"><div class="loadingZ"><img src="../../skin/images/zhuan.gif"><p>'+text+'</p></div></div>';
+	$('body').append(html);
+}
+function loadingRemove(){
+	$('.loadingZhuan').remove();
+}
+
+</script> 
+<!-- 腾讯监控开始 -->
+<script>
+	var _mtac = {};
+	(function() {
+		var mta = document.createElement("script");
+		mta.src = "http://pingjs.qq.com/h5/stats.js?v2.0.2";
+		mta.setAttribute("name", "MTAH5");
+		mta.setAttribute("sid", "500565159");
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(mta, s);
+	})();
+</script>
+<!-- 腾讯监控结束 -->
+</body>
+</html>

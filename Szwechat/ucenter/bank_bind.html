@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>我的银行卡</title>
+	<link rel="stylesheet" href="../skin/css/account.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/account.js?v=1"></script>
+</head>
+<body>
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="bank_bind">
+	<p class="bank_bind_t">请绑定持卡人本人的借记卡，<span class="red">提现金额</span>会打到该账户中</p>
+	<div class="bank_bind_input">
+		<ul>
+			<li><span>开户人</span><input type="text" name="name" placeholder="请输入开户人姓名" onblur="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');Bandname(value)"></li>
+			<li><span>卡&#x3000;号</span><input type="number" name="bankCard" placeholder="请输入借记卡号" oninput="if(value.length>19)value=value.slice(0,19)" onblur="value=value.replace(/[^0-9]/g,'');creditCard($(this));" onkeyup="bankCardType(value);"></li>
+		</ul>
+		<p>银行卡类型：<span id="bankOwned"></span><input name="bankOwned" type="hidden"></p>
+	</div>
+	<div class="msg_w"><p class="msg"></p></div>
+	<div class="bank_bind_bot">
+		<div class="protocol_line">
+			<label><input checked="checked" type="checkbox" name="protocol"><span></span></label>
+			<b>阅读并同意</b><a href="javascript:$('.protocol_wrap').css('display', 'block');">《银行卡用户服务协议》</a>
+		</div>
+		<p class="bank_bind_ts">为了保障您提现，请准确填写银行信息</p>
+		<div class="bank_bind_btn"><a class="deposit" onclick="bankSubmit()">下一步</a></div>
+	</div>
+</section>
+<div class="protocol_wrap" style="display:none">
+	<header class="header_box2">
+		<div class="header">
+			<div class="header_goback" onclick="protocolClose()">返回上一页</div>
+			<div class="header_title"  onclick="protocolClose()">返回</div>
+		</div>
+	</header>
+	<div class="protocol_cen">
+		<section class="protocol">
+		<h3>银行卡用户服务协议</h3>
+		<ul>
+			<li>三真车联《银行卡用户服务协议》（以下简称“本协议”）是三真车联信息技术有限公司（以下简称“三真车联”）与三真车联平台用户(以下简称“您”)就“银行卡绑卡、支付服务”（以下简称“本服务”）的使用等相关事项所订立的有效合约。</li>
+			<li>您通过网络页面点击确认或以其他方式选择接受本协议，即表示您与三真车联已达成协议并同意接受本协议的全部约定内容。在接受本协议之前，请您仔细阅读本协议的全部内容。如果您不同意本协议的任意内容，请不要进行后续操作。</li>
+			<li>“银行卡绑卡、支付服务”指通过本服务，您同意将银行卡与您登录的三真车联平台账户进行绑定，以便您此次及今后可以通过三真车联平台传输您的支付指令从您的银行卡账户中扣除有关款项给收款方。</li>
+			<li>您应确保是使用本服务的银行卡持有人，可合法、有效使用该银行卡且未侵犯任何第三方合法权益，否则因此造成平台、持卡人损失的，您应负责赔偿并承担全部法律责任，包括但不限于冻结您的三真车联平台账户及资金，从您的平台账户中扣除相应的款项，并终止为您继续提供平台服务。</li>
+			<li>您同意三真车联收集您在使用本服务过程中所填写的包括但不限于姓名、银行卡卡号、手机号码、证件号码、证件类型、有效期等信息并有权自己或者委托第三方将上述信息发送至您的发卡银行进行验证，验证通过后，三真车联就可以为您开通本服务。同时，发卡行与三真车联保留随时变更上述确认要素作为校验标准的权利。</li>
+			<li>您应妥善保管银行卡和三真车联平台账号信息，包括但不限于银行卡卡号、密码、有效期，三真车联平台账号、密码、密保信息、手机校验码等信息。如您遗失银行卡、泄露三真车联账户密码或相关信息的，您应及时通知发卡行及/或三真车联平台，以减少可能发生的损失。因泄露上述银行卡信息、三真车联账号信息、丢失银行卡等所致损失需由您自行承担。</li>
+			<li>您同意，本协议适用中华人民共和国大陆地区法律。因三真车联与您就本协议的签订、履行或解释发生争议，双方应努力友好协商解决。如协商不成，三真车联和您同意由三真车联平台所在城市人民法院处理双方纠纷或争议。</li>
+			<li>本协议内容包括协议正文及所有三真车联已经发布的或将来可能发布的三真车联服务的使用规则。所有规则为本协议不可分割的一部分，与协议正文具有相同法律效力。若您在本协议内容发生修订后，继续使用本服务的，则视为您同意最新修订的协议内容，否则您须立即停止使用本服务。</li>
+			<li>本协议未尽事宜，您需遵守三真车联平台《普通用户注册协议》及相关规则。</li>
+		</ul>
+	</section>
+	<footer class="footer2">
+		<input class="footer_btn" type="button" value="我知道了" onclick="protocolSelect()">
+	</footer>
+	</div>
+</div>
+<script type="text/javascript">
+if (!userId()) {
+	 window.location.href='../login/not_login.html'
+}
+
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

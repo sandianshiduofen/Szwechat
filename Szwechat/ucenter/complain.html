@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>投诉反馈</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/ucenter.js?v=1"></script>
+</head>
+<body>
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="common_tel">
+	<ul class="f14">
+		<li>
+			<p><span class="red">*</span>问题类型</p>
+			<div class="comment_input comment_select">
+				<select name="type" class="complain_type" onchange="conNoNull($(this),'问题类型')">
+					<option value="">请选择</option>
+					<option value="0">资金类</option>
+					<option value="1">软件类</option>
+					<option value="2">其他类</option>
+				</select>
+			</div>
+			<div class="comment_msg msg"></div>
+		</li>
+		<li>
+			<p><span class="red">*</span>投诉内容</p>
+			<div class="complain_con comment_input">
+				<textarea name="content" id="" cols="30" rows="10" placeholder="请描述您的问题" maxlength="50"></textarea>
+			</div>
+			<div class="comment_msg msg"></div>
+			<div class="complain_img">
+				<div class="yanzRight" data-num="1">
+					<form id="formUp1" class="formUp">
+					<label>
+	                    <input class="images" id="evidence1" name="file" type="file" maxlength="" onchange="previewImage(this,1)"/>
+	                    <input type="hidden" class='imgsrc'>
+	                    <div class="img_show" id="preview1">
+	                    	 <img src="" alt="" id="imghead1" style="display:none;"/>
+	                	</div>
+                	</label>
+					</form>
+                	<div class="img_close_w"></div>
+                </div>
+			</div>
+			<div class="comment_msg msg"></div>
+		</li>
+		<li>
+			<p><span class="red">*</span>联系电话</p>
+			<div class="comment_input">
+				<input class="comment_input_t" name="phone" type="number" oninput="if(value.length>11)value=value.slice(0,11)" onblur="comPhoneNo($(this))" placeholder="请输入您的手机号">
+			</div>
+			<div class="comment_msg msg"></div>
+		</li>
+	</ul>
+	<footer class="footer2">
+		<input class="footer_btn" type="button" value="提交" onclick="complainSubmit()">
+	</footer>
+</section>
+
+<script type="text/javascript">
+$(function() {
+	requestTokenInput();
+});
+$('.common_tel').on('change', '.images',function(){
+	var index=$(this).parents('.yanzRight').index();
+	var self=$(this);
+	var formData = new FormData($( ".formUp" )[index]);
+	$.ajax({
+		url: wxApiHai+'/api/tms/pc/upload',
+		type: 'POST',
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function (data) {
+			var data=JSON.parse(data);
+			var src=data.info.domain+''+data.info.filePath;
+			self.siblings('input.imgsrc').val(src);
+		},
+		error: function (data) {
+		  alert(data);
+		}
+	});
+});
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

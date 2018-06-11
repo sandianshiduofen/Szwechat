@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>个人中心</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/ucenter.js?v=1"></script>
+</head>
+<body>
+<section class="uc">
+	<div class="uc_t">
+		<div class="uc_t_l" id="userInfo">
+			<p>加载中...</p>
+		</div>
+		<div class="uc_t_r">
+			<a href="../ucenter/edit_info.html"><img src="../skin/images/sz.png" ></a>
+		</div>
+	</div>
+	<div class="uc_c">
+		<table>
+			<tr class="uc_c_t">
+				<td>可用余额：</td>
+				<td class="red">3666.33</td>
+				<td>元</td>
+				<td><a href="javascriptt:;" onclick="$.MsgBox.Alert('您账户中可以自由支配的金额，可提现。','我知道了')"><img src="../skin/images/wenhao.png" alt=""></a></td>
+			</tr>
+			<tr>
+				<td>保护期余额：</td>
+				<td>3666</td>
+				<td>元</td>
+				<td><a href="javascriptt:;" onclick="$.MsgBox.Alert('暂时不能提现的余额，表明收货方还未确认收货。','我知道了')"><img src="../skin/images/wenhao.png" alt=""></a></td>
+			</tr>
+			<tr>
+				<td>总&#x3000;余&#x3000;额：</td>
+				<td>3666.33</td>
+				<td>元</td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+	<div class="uc_b">
+		<a href="">
+			<img src="../skin/images/ucenter1.png" alt="">
+			<span>我要提现</span>
+		</a>
+		<a href="">
+			<img src="../skin/images/ucenter2.png" alt="">
+			<span>资金记录</span>
+		</a>
+		<a href="">
+			<img src="../skin/images/ucenter3.png" alt="">
+			<span>安全密码</span>
+		</a>
+		<a href="">
+			<img src="../skin/images/ucenter4.png" alt="">
+			<span>银行卡信息</span>
+		</a>
+		<a href="../ucenter/ticket.html">
+			<img src="../skin/images/ucenter5.png" alt="">
+			<span>物流卷</span>
+		</a>
+		<!-- <a href="../ucenter/common_use_tel.html">
+			<img src="../skin/images/ucenter6.png" alt="">
+			<span>常用收货电话</span>
+		</a> -->
+		<a href="../ucenter/ship_address.html">
+			<img src="../skin/images/ucenter7.png" alt="">
+			<span>发货地址簿</span>
+		</a>
+		<a href="../ucenter/receiving_party.html">
+			<img src="../skin/images/ucenter8.png" alt="">
+			<span>收货地址簿</span>
+		</a>
+		<a href="../ucenter/complain.html">
+			<img src="../skin/images/ucenter9.png" alt="">
+			<span>投诉反馈</span>
+		</a>
+		<a href="../ucenter/qr_code.html">
+			<img src="../skin/images/ucenter10.png" alt="">
+			<span>我的二维码</span>
+		</a>
+	</div>
+
+</section>
+
+<script type="text/javascript">
+	$(function() {
+		$.ajax({
+			url: api+'/api/platform/login/findUser',
+			type: 'post',
+			dataType: 'json',
+			data: {id:userId(),requestTokenId:requestTokenId()},
+			success:function(data){
+				if (data.success) {
+					var html="";
+					html='<p>'+data.info.company+'</p><p>'+data.info.tel+'</p>'
+					$('#userInfo').html(html);
+				}else{
+					alert(data.message);
+				};
+			}
+		});
+	});
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>鼠标拾取地图坐标</title>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.4&key=95596fede2fcca4aa69d161f5c238e22&plugin=AMap.Autocomplete"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <style type="text/css">
+    *{margin:0;padding: 0;list-style:none;}
+    body,html{width:100%;}
+	#container,#mapContainer{height:300px;width:100%;}
+    </style><style type="text/css">
+        #tip {height: 50px;background-color: #fff;padding-left: 10px;padding-right: 10px;border: 1px solid #969696;position: absolute;font-size: 12px;right: 10px;bottom: 20px;border-radius: 3px;line-height: 45px;}
+        #tip input[type='button'] {margin-left: 10px;margin-right: 10px;margin-top: 10px;background-color: #0D9BF2;height: 30px;text-align: center;line-height: 30px;color: #fff;font-size: 12px;border-radius: 3px;outline: none;border: 0;float: right;}
+    </style>
+</head>
+<body>
+<div id="mapContainer"></div>
+<div id="tip">
+    <input type="button" value="开始定位" onClick="javascript:toolBar.doLocation()"/>
+    <span style="color: #C0C0C0"><input type="text" id="addressName"><button>确定</button><input type="text" id="jingwei"></span>
+</div>
+
+<script type="text/javascript">
+      //自定义定位标记
+    var toolBar;
+    var customMarker = new AMap.Marker({
+        offset: new AMap.Pixel(-0, -0),//相对于基点的位置
+        icon: new AMap.Icon({  //复杂图标
+            size: new AMap.Size(27, 36),//图标大小
+            image: "http://webapi.amap.com/theme/v1.3/markers/n/mark_bs.png", //大图地址
+            // imageOffset: new AMap.Pixel(-28, 0)//相对于大图的取图位置
+        })
+    });
+    //初始化地图对象，加载地图
+    var map = new AMap.Map('mapContainer', {
+        resizeEnable: true,
+        zoom: 18
+    });
+
+    AMap.service('AMap.Geocoder',function(){//回调函数
+        //实例化Geocoder
+        geocoder = new AMap.Geocoder({
+            city: "010"//城市，默认：“全国”
+        });
+        //TODO: 使用geocoder 对象完成相关功能
+    })
+
+
+    //地图中添加地图操作ToolBar插件
+    map.plugin(["AMap.ToolBar"], function() {
+        toolBar = new AMap.ToolBar({
+            locationMarker: customMarker,
+            autoPosition:true
+        }); //设置地位标记为自定义标记
+        map.addControl(toolBar);
+
+        toolBar.on('location',function(){
+            console.log(toolBar.getLocation())
+            document.getElementById('jingwei').value=toolBar.getLocation().lng+","+toolBar.getLocation().lat;
+
+            var lnglatXY=[toolBar.getLocation().lng, toolBar.getLocation().lat];//地图上所标点的坐标
+            geocoder.getAddress(lnglatXY, function(status, result) {
+                if (status === 'complete' && result.info === 'OK') {
+                    console.log(result.regeocode.formattedAddress)
+                    var formattedAddress=result.regeocode.formattedAddress;
+                    document.getElementById('addressName').value=formattedAddress;
+                }else{
+                   //获取地址失败m
+                }
+            });  
+        })
+    });
+
+    var auto = new AMap.Autocomplete({
+        input: "addressName"
+    });
+
+
+    AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+    function select(e) {
+        if (e.poi && e.poi.location) {
+            map.setCenter(e.poi.location);
+            document.getElementById('jingwei').value=e.poi.location;
+
+
+        }
+    }
+    
+</script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+var appid="wx9d37162460f921d8",redirectUri="http://192.168.0.73",apiLsc="http://pweixinapi.3zqp.com",apiTms="http://ptms.3zqp.com";

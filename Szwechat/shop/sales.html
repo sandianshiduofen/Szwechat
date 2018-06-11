@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>主营</title>
+<style type="text/css">
+	html { background: #fff; font-size: 100px; max-width: 1080px;margin: 0 auto;height:100%;width:100%;}
+	body { color: #111; line-height: 1;  font-family: tahoma,Helvetica, Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "\5FAE\8F6F\96C5\9ED1"; -webkit-touch-callout: none; user-select: none; font-size: 0.12rem; height:100%;width:100%;}
+	*{margin: 0; padding: 0; resize: none;list-style: none; }
+	a {text-decoration: none; cursor: pointer; color: #555; }
+	/*头部*/
+	.header_box { height: 0.46rem; }
+	.header { background-color: #50b4ea; color: #fff; position: fixed; top: 0; left: 0; width: 100%; z-index: 9; height: 0.46rem; text-align: center; }
+	.header .header_goback,.header_t .header_t_goback,.header_fu .header_goback{ position: absolute; top: 0.05rem; display: block; height: 0.36rem; left: 0; background-image: url("../skin/images/icon_goback_w.png");width: 0.36rem; text-indent: -9999px; background-repeat: no-repeat; background-position: center; background-size: auto 0.22rem;  }
+	.header .header_title { font-weight: normal; text-align: center; width: 100%; line-height:  0.46rem; }
+
+	.sales_w h4{height:0.4rem;line-height: 0.4rem;font-size:0.16rem;padding:0 4%;color:#666;font-weight:normal;}
+	.sales_list{padding:0 4%;border-top:1px solid #efeff4;}
+	.sales_list .sales_tit{height:0.55rem;padding-top:0.1rem;}
+	.sales_list .sales_tit span{height:0.4rem;width:0.5rem;float: left;}
+	.sales_list .sales_tit img{height:100%;width:auto;}
+	.sales_list .sales_tit p{width:80%;float: left;line-height: 0.4rem;font-size:0.16rem;color:#666;}
+	.sales_con_w{overflow: hidden; height:0.76rem;}
+	.sales_con{overflow: hidden;}
+	/* .sales_con.sales_con_h{height:0.75rem;} */
+	.sales_con li{width:22%;float: left;height:0.26rem;line-height: 0.26rem;border-radius:5px;border:1px solid #e4e4e4;text-align: center;margin:0 3% 0.1rem 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+	.sales_con li:nth-child(4n){margin-right:0;}
+	.sales_button button{height:0.3rem;line-height: 0.3rem;text-align: center;display:block;margin-bottom:0.1rem;font-size:0.14rem;background: none;display:block;border:none;width:100%;outline:none;}
+	.sales_button button b{display:inline-block;height:0.1rem;width:0.1rem;background: url(../skin/images/more.png) 0 0 no-repeat;-webkit-background-size: 0.1rem auto;
+	background-size: 0.1rem auto;}
+	.sales_nav_w{height:0.4rem;width:100%;}
+	.sales_nav{height:0.4rem;width:100%;padding-bottom:1px;font-size: 0.14rem;background: #fff;position: fixed;top:0;left:0;}
+	.sales_nav p{display:table-cell;text-align: center;float: left;width:33%;height:0.4rem;line-height:0.4rem;}
+	.sales_nav p span{height:0.2rem;line-height:0.2rem;display:block;border-right:1px solid #ddd;margin-top:0.1rem;}
+	.sales_nav p.cur{border-bottom:1px solid #7499ff;}
+	.sales_nav p:last-child span{border:none;}
+	.sales_li_no{text-align: center;line-height:1rem;}
+	.sales_li_all{display:none;}
+</style>
+<link rel="stylesheet" href="../skin/js/swiper/swiper.css">
+<script type="text/javascript" src="../skin/js/config.js"></script>
+<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+<script type="text/javascript" src="../skin/js/swiper/swiper.js"></script>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+</head>
+<body>
+<section class="wraper" id="shop">
+	<!-- <header class="header_box">
+		<div class="header">
+		<div class="header_goback" onclick="window.history.back()">返回上一页</div>
+			<h1 class="header_title">主营</h1>
+		</div>
+	</header> -->
+	<div class="sales_w">
+		<div class="sales_nav_w">
+			<div class="sales_nav">
+				<p class="cur"><span>乘用车(<b class="cheng1">0</b>)</span></p>
+				<p><span>客车/货车(<b class="cheng2">0</b>)</span></p>
+				<p><span>专项件(<b class="cheng3">0</b>)</span></p>
+			</div>
+		</div>
+		<div class="sales_li_all" id="sales_li_all">
+			<div class="sales_li_list sales_li_list1"><p class="sales_li_no">暂无乘用车</p></div>
+			<div class="sales_li_list sales_li_list2"><p class="sales_li_no">暂无客车/货车</p></div>
+			<div class="sales_li_list sales_li_list3"><p class="sales_li_no">暂无专项件</p></div>
+		</div>
+	</div>
+<script type="text/javascript">
+$(function() {
+	var app=apiLsc;
+	var id=GetQueryString('id');
+	var groupId=GetQueryString('groupId');
+	$.ajax({
+		method: 'POST',
+		// url: app+'/api/wx/login/findsuppliermain',
+		url: app+'/api/wx/login/v1/findsuppliermain',
+		data: {
+		    supplierId: id,
+		    groupId:groupId,
+		    requestTokenId:requestTokenId()
+		},
+		success: function (data) {
+			$('.sales_li_all').css('display', 'block');
+			var html='';
+			var data=JSON.parse(data)
+			// console.log(data)
+			if (data.success) {
+				var info=data.info;
+				if (info.length>0) {
+					for (var i = 0; i < 3; i++) {
+						if (info[i]&&info[i].groupId==0) {
+							$('.cheng1').html(info[i].list.length);
+							$('.sales_li_list1').html(content(info[i]))
+						};
+						if (info[i]&&info[i].groupId==1) {
+							$('.cheng2').html(info[i].list.length);
+							$('.sales_li_list2').html(content(info[i]))
+						};
+						if (info[i]&&info[i].groupId==2) {
+							$('.cheng3').html(info[i].list.length);
+							$('.sales_li_list3').html(content(info[i]))
+						};
+						
+					};
+				}else{
+					html+='无';
+				};
+				// $('.sales_li_all').html(html);
+
+				/*适应高度和点击更多*/
+				var liHeight=$('.sales_con li').outerHeight(true);
+				$('.sales_con_w').css('height', 'auto');
+				$('.sales_button button').click(function(event) {
+					var salesConH=$(this).parents('.sales_button').siblings('.sales_con_w').children('.sales_con').outerHeight(true);
+					var prev=$(this).parents('.sales_button').prev();
+					if (prev.outerHeight()>liHeight*2) {
+						prev.animate({height: liHeight*2}, 300)
+						prev.attr('data-height','true');
+						$(this).children('span').html('查看更多');
+						$(this).children('b').css('background-position', '0 0');
+					}else{
+						prev.removeAttr('data-height');
+						prev.animate({height: salesConH}, 300)
+						$(this).children('span').html('收起');
+						$(this).children('b').css('background-position', 'left bottom');
+					};
+				});
+				for (var i = 0; i < $('.sales_con_w').length; i++) {
+					var salesCon=$('.sales_con_w').eq(i);
+					if (salesCon.outerHeight()>liHeight*2) {
+						salesCon.height(liHeight*2);
+					}else{
+						salesCon.siblings('.sales_button').remove();
+					};
+				};
+				$('.sales_li_list').css('display', 'none');
+				$('.sales_li_list').eq(0).css('display', 'block');
+			}else{
+				alert(data.message);
+			};
+		}
+	});
+
+function content(info){
+	// console.log(info)
+	var html="";
+	var brand=info.list;
+	for (var k = 0; k < brand.length; k++) {
+		html+='<div class="sales_list">\
+		<div class="sales_tit">\
+			<span><img src="https://3zxgimg.oss-cn-beijing.aliyuncs.com/'+brand[k].url+'"></span>\
+			<p>'+brand[k].brandName+'</p>\
+		</div><div class="sales_con_w">\
+		<ul class="sales_con">'
+		for (var j = 0; j < brand[k].listCar.length; j++) {
+			html+='<li>'+brand[k].listCar[j].carName+'</li>'
+		};
+		html+='</ul></div>\
+		<div class="sales_button">\
+			<button href="javascript:;"><span>查看更多</span> <b></b></button>\
+		</div>\
+		</div>';
+	};
+	return html;
+}
+	
+	$(".sales_nav").on("click","p",function(){
+		var ind=$(this).index();
+		$(this).addClass('cur').siblings('p').removeClass('cur');
+		$('.sales_li_all .sales_li_list').eq(ind).css('display', 'block').siblings('.sales_li_list').css('display', 'none');
+	});
+
+
+});
+function requestTokenId(num){
+	len =num||32;
+　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+　　var maxPos = $chars.length;
+　　var pwd = '';
+　　for (i = 0; i < len; i++) {
+　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+　　}
+	return 'wx_tms_'+pwd;
+}
+
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+</script>
+
+
+</section>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

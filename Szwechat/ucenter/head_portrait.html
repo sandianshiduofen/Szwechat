@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>我的头像</title>
+	<link rel="stylesheet" href="../skin/css/account.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/exif/exif.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/ucenter.js?v=1"></script>
+	<style type="text/css">
+	.imgSupernatant{position: fixed;left:0;right:0;bottom:0;top:0;background: rgba(0,0,0,0.8);z-index:20;}
+	.headShowImg canvas{width:100%;height:auto;position: absolute;left:0;top:0;}
+	</style>
+</head>
+<body>
+<section class="account">
+	<header class="header_box">
+		<div class="header">
+			<div class="header_goback" onclick="window.location.href='../ucenter/ucenter.html'">返回上一页</div>
+			<div class="header_title"  onclick="window.location.href='../ucenter/ucenter.html'">返回</div>
+		</div>
+		</header>
+	<form class="formUp">
+			<input type="hidden" name="type" value="3" />
+      		<input type="hidden" name="path" value="headImg" />
+			<input name="headImgShow" type="hidden" value="">
+			<div class="headShowImg" id="headShowImg"><img src="../skin/images/head.jpg"></div>
+			<div class="selcet_img"><label><b><span>选择头像</span><input class="headImg" accept="image/*" id="headImg" name="" type="file" onchange="selectFileImage(this)"></b></label></div>
+	
+	</form>
+</section>
+<footer>
+	<input class="footer_btn" type="button" value="确定" id="headImgUpdate" onclick="imgSubmit()">
+</footer>
+<script src="../skin/js/AlloyCrop/asset/transform.js"></script>
+<script src="../skin/js/AlloyCrop/asset/alloy-finger.js"></script>
+<script src="../skin/js/AlloyCrop/alloy-crop.js"></script>
+
+<script type="text/javascript">
+if (userId()) {
+    loading('loading...');
+	$.ajax({
+		url: apiL+'/api/wx/login/finduser',
+		type: 'post',
+		dataType: 'json',
+		data: {id:userId(),requestTokenId:requestTokenId()},
+		success:function(data){
+            loadingRemove();
+			if (data.success) {
+				if (data.info.headUrl) {
+					$('.headShowImg img').attr('src', imgShowApi()+''+data.info.headUrl);
+				};
+			}else{
+				alert(data.message);
+			};
+		}
+	});
+}else{
+    window.location.href='../login/not_login.html'
+};
+
+var crop_result = document.querySelector("#headShowImg");
+var imgurl = "";  
+function getPhotoOrientation(img){
+    EXIF.getData(img, function () {
+       var  orient = EXIF.getTag(this, 'Orientation');
+    });
+    return orient;
+}
+function drawPhoto(photo, x, y, w, h) {
+    //获取照片的拍摄方向
+    var orient = getPhotoOrientation(photo);
+    alert("orient2:"+orient);
+ 
+    var canvas = document.getElementById("canvas");
+    if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+ 
+        //draw on Canvas
+        var img = new Image();
+        img.onload = function () {
+ 
+            var canvas_w = Number(ctx.canvas.width);
+            var canvas_h = Number(ctx.canvas.height);
+ 
+            //判断图片拍摄方向是否旋转了90度
+            if (orient == 6) {
+                ctx.save();//保存状态
+                ctx.translate(canvas_w / 2, canvas_h / 2);//设置画布上的(0,0)位置，也就是旋转的中心点
+                ctx.rotate(90 * Math.PI / 180);//把画布旋转90度
+                // 执行Canvas的drawImage语句
+                ctx.drawImage(img, Number(y) - canvas_h / 2, Number(x) - canvas_w / 2, h, w);//把图片绘制在画布translate之前的中心点，
+                ctx.restore();//恢复状态
+            } else {
+                // 执行Canvas的drawImage语句
+                ctx.drawImage(img, x, y, w, h);
+            }
+        }
+        img.src = photo.src; // 设置图片源地址
+    }
+}
+function creatImg(imgRUL){
+    new AlloyCrop({
+        image_src: imgRUL,
+        width: 300,
+        height: 300,
+        output: 1,
+        ok: function (base64, canvas) {
+            // crop_result.appendChild(canvas);
+            $('.headShowImg').html(canvas);
+            crop_result.querySelector("canvas").style.borderRadius = "0%";
+        },
+        cancel: function () {
+        }
+    });
+} 
+
+//从 canvas 提取图片 image  
+function convertCanvasToImage(canvas) {
+    var image = new Image();
+    image.src = canvas.toDataURL("image/png");  
+    return image;
+}
+function imgSubmit(){
+	if ($('#headImg').val()) {
+		loading('正在上传图片...'); 
+		var mycans=$('canvas')[0];
+		//调用convertCanvasToImage函数将canvas转化为img形式  
+		var img=convertCanvasToImage(mycans);  
+		//将img插入容器 
+		$('.headShowImg').append(img);
+	    var data=mycans.toDataURL();
+	    // dataURL 的格式为 “data:image/png;base64,****”,逗号之前都是一些说明性的文字，我们只需要逗号之后的就行了
+	    data=data.split(',')[1];
+	    data=window.atob(data);
+	    var ia = new Uint8Array(data.length);
+	    for (var i = 0; i < data.length; i++) {
+	        ia[i] = data.charCodeAt(i);
+	    };
+	    // canvas.toDataURL 返回的默认格式就是 image/png
+	    var blob=new Blob([ia], {type:"image/png"});
+	    var fd = new FormData($(".formUp")[0]);
+        fd.append('file',blob);
+	    fd.append('requestTokenId',requestTokenId());
+	    $.ajax({
+            url: wxApiHai+'/api/tms/wx/upload',
+	        type: 'post',
+	        data: fd,
+            timeout : 10000,
+	        cache: false,
+	        contentType: false,
+	        processData: false,
+	        success: function (data) {
+                loading('正在上传图片...');
+                if ((typeof data)=='string') {
+                    var data=JSON.parse(data);
+                };
+                if (data.success) {
+                    var src=data.info.filePath;
+                    $.ajax({
+                        url: apiL+'/api/wx/hand/add_v1',
+                        type: 'POST',
+                        dataType: 'json',
+                        timeout : 10000,
+                        data: {userId:userId(),headUrl:src,type:type(),requestTokenId:requestTokenId()},
+                        success:function(data){
+                            loadingRemove();
+                            if (data.success) {
+                                alert('上传成功');
+                                window.location.href='../../ucenter/ucenter.html';
+                            }else{
+                                alert(data.message);
+                            };
+                        },
+                        complete : function(XMLHttpRequest,status){
+                            loadingRemove();
+                            if(status=='error'){
+                                alert('上传失败');
+                            }else if(status=='timeout'){
+                                alert('上传超时');
+                            }
+                        }
+                    });
+                }else{
+                    alert('上传失败');
+                };
+	            
+	        },
+            complete : function(XMLHttpRequest,status){
+                loadingRemove();
+                if(status=='error'){
+                    alert('上传失败');
+                }else if(status=='timeout'){
+                    alert('上传超时');
+                }
+            }
+	    });
+	}else{
+		window.location.href='../../ucenter/ucenter.html';
+	};
+}
+
+function selectFileImage(fileObj) {  
+    var file = fileObj.files['0'];  
+    //图片方向角 added by lzk  
+    var Orientation = null;
+    if (file) {
+        loading('正在获取图片...');  
+        var rFilter = /^(image\/jpeg|image\/png)$/i;
+        if (!rFilter.test(file.type)) {
+            return;  
+        }
+        EXIF.getData(file, function() {
+            EXIF.getAllTags(this);
+            Orientation = EXIF.getTag(this, 'Orientation');  
+            //return;  
+        });
+          
+        var oReader = new FileReader();  
+        oReader.onload = function(e) {
+            var image = new Image();  
+            image.src = e.target.result;  
+            image.onload = function() {  
+                var expectWidth = this.naturalWidth;  
+                var expectHeight = this.naturalHeight;  
+                  
+                if (this.naturalWidth > this.naturalHeight && this.naturalWidth > 800) {  
+                    expectWidth = 800;  
+                    expectHeight = expectWidth * this.naturalHeight / this.naturalWidth;  
+                } else if (this.naturalHeight > this.naturalWidth && this.naturalHeight > 1200) {  
+                    expectHeight = 1200;  
+                    expectWidth = expectHeight * this.naturalWidth / this.naturalHeight;  
+                }  
+                var canvas = document.createElement("canvas");  
+                var ctx = canvas.getContext("2d");  
+                canvas.width = expectWidth;  
+                canvas.height = expectHeight;  
+                ctx.drawImage(this, 0, 0, expectWidth, expectHeight);  
+                var base64 = null;  
+                //修复ios  
+                if (navigator.userAgent.match(/iphone/i)) {
+                    //如果方向角不为1，都需要进行旋转 added by lzk  
+                    if(Orientation != "" && Orientation != 1){
+                        switch(Orientation){
+                            case 6://需要顺时针（向左）90度旋转  
+                                rotateImg(this,'left',canvas);  
+                                break;  
+                            case 8://需要逆时针（向右）90度旋转  
+                                rotateImg(this,'right',canvas);  
+                                break;  
+                            case 3://需要180度旋转  
+                                rotateImg(this,'right',canvas);//转两次  
+                                rotateImg(this,'right',canvas);  
+                                break;  
+                        }         
+                    }
+                    base64 = canvas.toDataURL("image/jpeg", 0.8);  
+                }else{
+                    if(Orientation != "" && Orientation != 1){
+                        switch(Orientation){  
+                            case 6://需要顺时针（向左）90度旋转  
+                                rotateImg(this,'left',canvas);  
+                                break;  
+                            case 8://需要逆时针（向右）90度旋转  
+                                rotateImg(this,'right',canvas);  
+                                break;  
+                            case 3://需要180度旋转
+                                rotateImg(this,'right',canvas);//转两次  
+                                rotateImg(this,'right',canvas);  
+                                break;  
+                        }         
+                    }  
+                      
+                    base64 = canvas.toDataURL("image/jpeg", 0.8);  
+                }
+                $("#myImage").attr("src", base64); 
+                loadingRemove();
+        		creatImg(base64);
+            };  
+        };  
+        oReader.readAsDataURL(file);
+    }  
+}  
+
+function rotateImg(img, direction,canvas) {
+    //最小与最大旋转方向，图片旋转4次后回到原方向
+    var min_step = 0;
+    var max_step = 3;
+    if (img == null)return;    
+    //img的高度和宽度不能在img元素隐藏后获取，否则会出错
+    var height = img.height;    
+    var width = img.width;
+    var step = 2;    
+    if (step == null) {    
+        step = min_step;    
+    }    
+    if (direction == 'right') {    
+        step++;    
+        //旋转到原位置，即超过最大值    
+        step > max_step && (step = min_step);    
+    } else {    
+        step--;    
+        step < min_step && (step = max_step);    
+    }
+    //旋转角度以弧度值为参数    
+    var degree = step * 90 * Math.PI / 180;    
+    var ctx = canvas.getContext('2d');    
+    switch (step) {    
+        case 0:    
+			canvas.width = width;    
+			canvas.height = height;    
+			ctx.drawImage(img, 0, 0);    
+			break;    
+        case 1:    
+			canvas.width = height;    
+			canvas.height = width;    
+			ctx.rotate(degree);    
+			ctx.drawImage(img, 0, -height);    
+			break;    
+        case 2:    
+			canvas.width = width;    
+			canvas.height = height;    
+			ctx.rotate(degree);    
+			ctx.drawImage(img, -width, -height);    
+			break;    
+        case 3:    
+			canvas.width = height;    
+			canvas.height = width;    
+			ctx.rotate(degree);    
+			ctx.drawImage(img, -width, 0);    
+			break;    
+		}    
+	}
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>
+

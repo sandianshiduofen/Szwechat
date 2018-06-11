@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>常用收货电话</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/ucenter.js?v=1"></script>
+</head>
+<body>
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="window.location.href='../ucenter/ucenter.html'">返回上一页</div>
+		<div class="header_title"  onclick="window.location.href='../ucenter/ucenter.html'">返回</div>
+	</div>
+</header>
+	<section class="common_tel">
+		<p class="common_tel_ti">绑定常用电话，商家在发货时可搜索该电话，匹配到您的地址信息，能够更准确的给您发货，最多可上传10个</p>
+		<div class="telListBox">
+			
+		</div>
+	</section>
+	<footer>
+		<a class="footer_btn" href="../ucenter/common_tel_edit.html">添加</a>
+	</footer>
+
+	<script type="text/javascript">
+	$(function() {
+		if (userId()) {
+			commonTel();
+		}else{
+			window.location.href='../login/not_login.html'
+		};
+		
+	});
+	function commonTel(){
+		loading('loading...');
+		$.ajax({
+			url: apiL+'/api/wx/contacts/list',
+			type: 'POST',
+			dataType: 'json',
+			data: {userId:userId(),requestTokenId:requestTokenId()},
+			success:function(data){
+				loadingRemove();
+				console.log(data);
+				if (data.success) {
+					var len=data.info.length;
+					if (len>=10) {
+						$('footer').remove();
+					};
+					var html="";
+					if (len>0) {
+						html+='<ul class="f14" id="telList">'
+						for (var i = 0; i < data.info.length; i++) {
+							html+='<li><p>常用手机'+(i+1)+'</p><div class="comment_input">'
+							+'<input type="number" value="'+data.info[i].phone+'" readonly>'
+							+'<p><a class="com_tel_edit" href="../ucenter/common_tel_edit.html?id='+data.info[i].id+'&tel='+data.info[i].phone+'&num='+(i+1)+'">编辑</a>'
+								+'<a class="com_tel_del" href="javascript:;" onclick="delPhone($(this),'+data.info[i].id+')">删除</a></p></div></li>'
+						};
+						html+='</ul>';
+						$('.telListBox').html(html);
+					}else{
+						noResult($('.telListBox'),400,'您还没有添加常用联系电话')
+					};
+				}else{
+					alert(data.message);
+				};
+			}
+		});
+		popstateUcenter();
+	}
+	</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

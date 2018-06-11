@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>经销商店铺</title>
+<style type="text/css">
+	html { background: #fff; font-size: 100px; max-width: 1080px;margin: 0 auto;height:100%;width:100%;}
+	body { color: #111; line-height: 1;  font-family: tahoma,Helvetica, Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "\5FAE\8F6F\96C5\9ED1"; -webkit-touch-callout: none; user-select: none; font-size: 0.12rem; height:100%;width:100%;}
+	*{margin: 0; padding: 0; resize: none;list-style: none; }
+	a {text-decoration: none; cursor: pointer; color: #555; }
+	.loadingZhuan{position: fixed;left:0;top: 0;top: 0;bottom: 0;right: 0;background: rgba(0,0,0,0.1);z-index: 100;}
+	.loadingZ{position: fixed;height:0.7rem;width:1rem;background: rgba(0,0,0,0.7);left:50%;margin-left:-0.5rem;top:50%;margin-top:-0.5rem;border-radius:3px;padding:0.15rem 0;}
+	.loadingZ img{width:0.4rem;display:block;margin:0 auto;}
+	.loadingZ p{text-align: center;color:#fff;line-height: 0.3rem;font-size:0.14rem;}
+
+	/*头部*/
+	.header_box { height: 0.46rem; }
+	.header { background-color: #50b4ea; color: #fff; position: fixed; top: 0; left: 0; width: 100%; z-index: 9; height: 0.46rem; text-align: center; }
+	.header .header_title { font-weight: normal; text-align: center; width: 100%; line-height:  0.46rem; }
+	/* 内容*/
+	.wx_banner{width:100%;height:auto;}
+	.wx_banner img{width:100%;height:auto;}
+	.wx_content{padding: 0 4%;line-height:0.25rem;}
+	.wxc_top{padding: 0.1rem 0 0.05rem;/* border-bottom: 1px dashed #b1b1b1; */font-size: 0.13rem;}
+	.wxc_title{font-size: 0.16rem;font-weight: bold;line-height: 0.22rem;}
+	.wxc_bot{padding-top: 0.05rem;font-size: 0.13rem;}
+	.wxc_bot .wxc_jianj{ overflow: hidden;border-bottom:1px solid #ededed;padding:0.05rem 0;}
+	.wxc_bot .wxc_jianj:last-child{border-bottom:none;}
+	.wxc_bot .wxc_jianj span{width: 20%;float: left;color:#666;}
+	.wxc_bot .wxc_jianj ul{width: 80%;float: left;}
+	/*.wxc_bot .wxc_jianj ul li{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}*/
+	.swiper-wrapper{height:auto;}
+	.swiper-container-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet{background:#fff;}
+	.wxc_bot .wxc_jianj_t ul{background: url(../skin/images/icon_go.png) right center no-repeat;-webkit-background-size: 0.20rem auto;background-size: 0.20rem auto;height:0.25rem;}
+	.wxc_bot .wxc_jianj_t ul li{text-overflow: ellipsis;white-space: nowrap;overflow: hidden;width:90%;height:0.25rem;}
+	.wxc_bot .wxc_jianj_s{border-bottom:none;}
+	.wxc_bot .wxc_jianj_s .wxc_jianj_img span{width:28%;float: left;padding-bottom:28%;position: relative;margin-right:7%;}
+	.wxc_bot .wxc_jianj_s .wxc_jianj_img span:nth-child(3){margin-right:0;}
+	.wxc_bot .wxc_jianj_s .wxc_jianj_img span img{position: absolute;width:100%;height:auto;left:0;top:0;height:100%;}
+	/*放大轮播图*/
+	.swiper-img{width:100%;}
+	.swiper-img img{width:100%;}
+	.swiper-img-s{height:1rem;width:50%;}
+	.swiper-img-wrap{position: fixed;height: 100%;left:0;top:0;right:0;bottom:0;z-index:999;}
+	.swiper-img {width: 100%;margin-left: auto;margin-right: auto;}
+    .swiper-flex-w{display: flex;justify-content: center;width:100%;height:100%;align-items: center;}
+    .swiper-flex{width:100%;}
+    .swiper-slide {background-size: cover;background-position: center; }
+    .gallery-top {height: auto;width: 100%;}
+    .gallery-thumbs {height: 10%;box-sizing: border-box;padding: 10px 0;}
+    .gallery-thumbs .swiper-slide {border:2px solid #999;width: 25%;height: 100%;opacity: 0.4;}
+    .gallery-thumbs .swiper-slide-active { opacity: 1;}
+	.swiper-bg{width:100%;height:100%;background: #000;position: absolute;}
+	.swiper-close{position: absolute;right:6%;color:#fff;top:0.3rem;height:0.3rem;width:0.3rem;overflow: hidden;background: url(../skin/images/inp_close.png) 0 0 no-repeat;-webkit-background-size: 0.3rem auto;background-size: 0.3rem auto;z-index:10;}
+</style>
+</head>
+<body>
+<section class="wraper" id="shop">
+	<!-- <header class="header_box">
+		<div class="header">
+			<h1 class="header_title">店铺名称</h1>
+		</div>
+	</header> -->
+	<div class="mobile_app">
+		<div class="swiper-container wx_banner">
+		    <div class="swiper-wrapper">
+		        <div class="swiper-slide"></div>
+		    </div>
+		    <div class="swiper-pagination"></div>
+		</div>
+		<div class="wx_content">
+			<div class="wxc_top">
+				<div class="wxc_title">店铺名称</div>
+			</div>
+			<div class="wxc_bot">
+				<div class="wxc_jianj">
+					<span>汽配城：</span>
+					<ul>
+					</ul>
+				</div>
+				<div class="wxc_jianj">
+					<span>主 &nbsp; 营：</span>
+				</div>
+				<div class="wxc_jianj">
+					<span>地 &nbsp; 址：</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<script id="swiper" type="text/html">
+	<div class="swiper-img-wrap" style="display:none">
+		<div class="swiper-flex-w">
+			<div class="swiper-bg"></div>
+			<div class="swiper-flex">
+				<div class="swiper-img gallery-top">
+					<div class="swiper-close"></div>
+			        <div class="swiper-wrapper">
+			        	{{each aptitudeUrl as value}}
+			        	<div class="swiper-slide swiper-slide-img" style=""><div style="height:{{wHeight}}px;display: flex;align-items: center;"><img src="https://3zxgimg.oss-cn-beijing.aliyuncs.com/{{value}}" alt="实力展示"></div></div>
+			        	{{/each}}
+			        </div>
+			    </div>
+		    </div>
+	    </div>
+	</div>
+</script>
+<script id="test" type="text/html">
+	<!-- <header class="header_box">
+		<div class="header">
+			<h1 class="header_title">{{company}}</h1>
+		</div>
+	</header> -->
+	<div class="mobile_app"><div class="swiper-container wx_banner"><div class="swiper-wrapper">
+		{{each shopUrl value index}}
+			<div class="swiper-slide"><img src="https://3zxgimg.oss-cn-beijing.aliyuncs.com/{{value}}" alt="焦点图"></div>
+		{{/each}}
+		</div><div class="swiper-pagination"></div></div><div class="wx_content">
+			<div class="wxc_top">
+				<div class="wxc_title">{{company}}</div>
+			</div>
+			<div class="wxc_bot">
+				<div class="wxc_jianj wxc_jianQ">
+					<span>汽配城</span>
+					<ul>
+						<li>{{repairCenterName}}</li>
+					</ul>
+				</div>
+				<div class="wxc_jianj wxc_jianj_t">
+					<span>主 &nbsp; 营</span>
+					<ul onclick="window.location.href='sales.html?id={{id}}&groupId={{groupId}}'"><li>
+						{{each brand value index}}{{if brand.length-1 == index}}{{value.name}}{{else}}{{value.name}}、{{/if}}{{/each}}
+					</li></ul>
+				</div>
+				<div class="wxc_jianj">
+					<span>地 &nbsp; 址</span>
+					<ul>
+						<li>{{proName}}{{cityName}}{{areaName}}{{detailed}}</li>
+					</ul>
+				</div>
+				<div class="wxc_jianj wxc_jianj_s">
+				{{if aptitudeUrl}}
+					<div style="overflow:hidden;height:0.3rem"><span>实力照片</span></div>
+						<div class="wxc_jianj_img">
+						{{each aptitudeUrl value index}}
+							<span><img src="https://3zxgimg.oss-cn-beijing.aliyuncs.com/{{value}}" alt=""></span>
+						{{/each}}
+					</div>
+				{{else}}
+					<div style="overflow:hidden;height:0.3rem"><span>实力照片</span>无</div>
+				{{/if}}
+				
+				</div>
+				<div class="wxc_jianj">
+					<span>店铺简介</span>
+					<ul><li>{{shopProfile}}</li></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<link rel="stylesheet" href="../skin/js/swiper/swiper.css">
+<script type="text/javascript" src="../skin/js/config.js"></script>
+<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+<script type="text/javascript" src="../skin/js/artTemplate.js"></script>
+<script type="text/javascript" src="../skin/js/swiper/swiper.js"></script>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript">
+
+// 判断是否在微信页面打开
+	var api=apiLsc;
+	// var api='http://192.168.0.138:8193';
+	function is_weixin() {
+	    var ua = navigator.userAgent.toLowerCase();
+	    if (ua.match(/MicroMessenger/i) == "micromessenger") {
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
+	var isWeixin = is_weixin();
+	var winHeight = typeof window.innerHeight != 'undefined' ? window.innerHeight : document.documentElement.clientHeight;
+	function loadHtml(){
+		var div = document.createElement('div');
+		div.id = 'weixin-tip';
+		div.innerHTML = '<p>点击右上角，在浏览器中打开</p>';
+		document.body.appendChild(div);
+	}
+	
+	function loadStyleText(cssText) {
+        var style = document.createElement('style');
+        style.rel = 'stylesheet';
+        style.type = 'text/css';
+        try {
+            style.appendChild(document.createTextNode(cssText));
+        } catch (e) {
+            style.styleSheet.cssText = cssText; //ie9以下
+        }
+        var head=document.getElementsByTagName("head")[0]; //head标签之间加上style样式
+        head.appendChild(style);
+    }
+    var cssText = "#weixin-tip{position: fixed;background: rgba(0,0,0,0.2);filter:alpha(opacity=20); left:0; top:0;width: 100%; height:100%; z-index: 100;} #weixin-tip p{width:100%;height:0.48rem;text-align: center;color:#4990e2; line-height:0.48rem;background:#fff url(../skin/images/wxjt.png) 96% 0.06rem no-repeat;-webkit-background-size: 0.32rem;background-size: 0.32rem;font-size:0.18rem;}";
+	/*if(isWeixin){
+		loadHtml();
+		loadStyleText(cssText);
+	}*/
+
+function requestTokenId(num){
+	len =num||32;
+　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+　　var maxPos = $chars.length;
+　　var pwd = '';
+　　for (i = 0; i < len; i++) {
+　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+　　}
+	return 'wx_tms_'+pwd;
+}
+
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+window.onload=function(){
+/*获取数据*/
+	var id=GetQueryString('id');
+	loading('加载中');
+	$.ajax({
+		method: 'POST',
+		url: api+'/api/wx/share/supplier',
+		data: {
+		    supplierId: id,
+		    requestTokenId:requestTokenId()
+		},
+		success: function (data) {
+			loadingRemove();
+			var data=JSON.parse(data)
+			if (data.success) {
+				var info=data.info||{};
+				var company=info.company||'无';
+				var shopUrl=info.shopUrl?info.shopUrl.split(','):'';
+				var repairCenterName=info.repairCenterName||'无';
+				var brand=info.brand||[{'groupId':0,'name':'无'}];
+				var groupId=brand[0].groupId;
+				var proName=info.proName||'无';
+				var cityName=info.cityName||'无';
+				var areaName=info.areaName||'无';
+				var detailed=info.detailed||'无';
+				var aptitudeUrl=info.aptitudeUrl?info.aptitudeUrl.split(','):'';
+				var shopProfile=info.shopProfile||'无';
+				var wHeight=$(window).height();
+				share={
+					id:id,
+					company:company,
+					shopUrl:shopUrl,
+					repairCenterName:repairCenterName,
+					brand:brand,
+					groupId:groupId,
+					proName:proName,
+					cityName:cityName,
+					areaName:areaName,
+					detailed:detailed,
+					aptitudeUrl:aptitudeUrl,
+					shopProfile:shopProfile,
+					wHeight:wHeight
+				}
+				var html = template('test', share);
+				document.getElementById('shop').innerHTML = html;
+				// 门头照传图
+				var swiper = new Swiper('.swiper-container', {
+			        pagination: '.swiper-pagination',
+			        paginationClickable: true
+			    });
+			    // 微信分享
+				wxshare(company);
+				//标题为公司名
+				$('title').html(company);
+
+				// 焦点图
+				var imgHtml = template('swiper', share);
+				$('body').append(imgHtml)
+				// 点击实力照片
+			    $('.wxc_jianj_img').on('click', ' span', function(event) {
+			    	$('.swiper-img-wrap').css('display', 'block');
+				    var galleryTop = new Swiper('.gallery-top', {
+				        spaceBetween: 10,
+				    });
+			    	var index=$(this).index();
+			    	if (index!==0) {
+			    		galleryTop.slideTo(index, 0, false);
+			    	}else{
+			    		$('.swiper-flex-w .swiper-wrapper').css('transform', 'translate3d(0, 0px, 0px)');
+			    		galleryTop.slidePrev()
+			    	};
+			    });
+			    // 关闭实力照片
+			    $('.swiper-img-wrap').click(function(event) {
+			    	$('.swiper-img-wrap').css('display', 'none');
+			    });
+			}else{
+				alert(data.message);
+			};
+		}
+	});
+};
+/*微信分享*/
+function wxshare(company){
+	var curUrl=document.location.href;
+	var curTitle=company;
+	var desc='刚在三真修理厂发现一家还不错的店铺，好店要一起分享，赶快来瞧一瞧吧~';
+	var imgUrl='http://weixinweb.3zqp.com/skin/images/wxshareShop.jpg';
+	$.ajax({
+		url: api+'/api/wx/wecat/config',
+		type: 'POST',
+		dataType: 'json',
+		data: {url:curUrl,requestTokenId:requestTokenId()},
+		success:function(data){
+			if (data.success) {
+				wx.config({
+				    debug: false, 
+				    appId: data.info.appId,
+				    timestamp: data.info.timestamp,
+				    nonceStr: data.info.nonceStr,
+				    signature: data.info.signature,
+				    jsApiList: [
+				    	'onMenuShareAppMessage',
+				    	'onMenuShareTimeline',
+				    	'onMenuShareQQ',
+				    	'onMenuShareQZone'
+				    ]
+				});
+			}else{
+				alert(data.message);
+			};
+		}
+	});
+	
+	wx.ready(function(){
+		// 分享给朋友
+		wx.onMenuShareAppMessage({
+		  	title: curTitle,
+		    desc: desc,
+		    link: curUrl,
+		    imgUrl: imgUrl,
+		    type: 'link',
+		    dataUrl: '',
+		    success: function () {
+		        alert('分享给朋友成功');
+		    },
+		    cancel: function () {}
+		});
+		// 分享到朋友圈
+		wx.onMenuShareTimeline({
+		    title: '【'+curTitle+'】好店要一起分享',
+		    link: curUrl,
+		    imgUrl: imgUrl,
+		    success: function () { 
+		        alert('分享朋友圈成功成功');
+		    },
+		    cancel: function () {}
+		});
+		wx.onMenuShareQQ({
+		    title: curTitle,
+		    desc: desc,
+		    link: curUrl,
+		    imgUrl: imgUrl,
+		    success: function () { 
+		       alert('分享给qq好友成功');
+		    },
+		    cancel: function () {}
+		});
+		wx.onMenuShareQZone({
+		    title: '【'+curTitle+'】好店要一起分享',
+		    desc: desc,
+		    link: curUrl,
+		    imgUrl: imgUrl,
+		    success: function () { 
+		      	alert('qq空间分享成功');
+		    },
+		    cancel: function () {}
+		});
+	});
+}
+
+function loading(text){
+	var html='<div class="loadingZhuan"><div class="loadingZ"><img src="../skin/images/zhuan.gif"><p>'+text+'</p></div></div>';
+	$('body').append(html);
+}
+function loadingRemove(){
+	$('.loadingZhuan').remove();
+}
+
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

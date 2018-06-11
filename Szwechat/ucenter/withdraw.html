@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>提现</title>
+	<link rel="stylesheet" href="../skin/css/account.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/fastclick.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/account.js?v=1"></script>
+</head>
+<body>
+	<header class="header_box">
+		<div class="header">
+			<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+			<div class="header_title"  onclick="headerGoback()">返回</div>
+		</div>
+	</header>
+<section class="withdraw">
+	<div class="bank_card">
+		<p>提现银行卡：<br><span id="bindCard"></span></p>
+	</div>
+	<div class="edit_amount">
+		<p class="amount_ti">提现金额</p>
+		<div class="amount_input"><b>¥</b><input name="amount" type="number" onkeyup="serviceCharge(value)" onblur="this.value=this.value.replace(/[^\d^\.]/g,'');"><i onclick="amountTi()"></i></div>
+	</div>
+	<p class="amount_ti amount_ti2">可用金额共 <b id="extractAmount">0.00</b>元</p>
+	<p class="amount_ti amount_ti2 amount_shou" style="display:none;">手续费： <b id="serviceCharge">0.00</b>元</p>
+	<input type="hidden" id="amountShouInp">
+	<input type="hidden" name="takeMaxMoney" id="takeMaxMoney">
+	<a href="javascript:passwordOpen();" class="deposit deposit2">提现</a>
+</section>
+<style type="text/css">
+.ipt-box-nick{overflow: hidden;}
+</style>
+<div class="receive_pop_w psw_pay_w" style="display:none">
+	<div class="receive_pop">
+		<div class="receive_pop_c">
+			<div class="uc_cou_bot">
+				<div class="receive_pop_tit">
+					<span class="closePassword" onclick=""></span>
+				</div>
+				<div class="uc_cou_con">
+					<h4>验证密码</h4>
+					<div class="input_password">
+						<p>请输入密码</p>
+						<div class="password_six">
+							 <div class="">
+						        <form id="password" >
+						            <input readonly class="pass" type="password" maxlength="1" value="">
+						            <input readonly class="pass" type="password" maxlength="1" value="">
+						            <input readonly class="pass" type="password" maxlength="1" value="">
+						            <input readonly class="pass" type="password" maxlength="1" value="">
+						            <input readonly class="pass" type="password" maxlength="1" value="">
+						            <input readonly class="pass pass_right" type="password" maxlength="1" value="">
+						        </form>
+						    </div>
+						</div>
+						<div class="forget_psw"><a href="../ucenter/tel_code.html?find=1">忘记密码？</a></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="keyboardDIV"></div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	$('[name="amount"]').focus();
+	/*获取银行卡信息*/
+	if (userId()) {
+		bankList();
+	}else{
+	    window.location.href='../login/not_login.html'
+	};
+
+	/*密码输入框样式匹配安卓手机*/
+	var u = navigator.userAgent, app = navigator.appVersion;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+	var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+	if (isAndroid) {
+	    $('.pass').css('padding-bottom', '0');
+	}
+
+	/*支付密码*/
+	var check_pass_word='';var passwords = $('#password').get(0);
+    var div = '\
+	<div id="key" style="position:absolute;background-color:#A8A8A8;width:99.5%;bottom:0px;z-index:99;">\
+		<ul id="keyboard" style="font-size:20px;margin:2px -2px 1px 2px">\
+			<li class="symbol"><span class="off">1</span></li>\
+			<li class="symbol"><span class="off">2</span></li>\
+			<li class="symbol btn_number_"><span class="off">3</span></li>\
+			<li class="tab"><span class="off">4</span></li>\
+			<li class="symbol"><span class="off">5</span></li>\
+			<li class="symbol btn_number_"><span class="off">6</span></li>\
+			<li class="tab"><span class="off">7</span></li>\
+			<li class="symbol"><span class="off">8</span></li>\
+			<li class="symbol btn_number_"><span class="off">9</span></li>\
+			<li class="cancle btn_number_"></li>\
+			<li class="symbol"><span class="off">0</span></li>\
+			<li class="delete lastitem">删除</li>\
+		</ul>\
+	</div>\
+	';
+    var character,index=0;	$("input.pass").attr("disabled",true);	$("#password").attr("disabled",true);$("#keyboardDIV").html(div);
+
+    $('.closePassword').click(function(event) {
+    	MtaH5.clickStat('ucenter_withdraw_close');
+    	$('.pass').val('');
+    	index=0;
+    	$('.receive_pop_w').css('display', 'none');
+    });
+    /*自定义键盘点击*/
+   
+	/*自定义键盘点击事件*/
+    $('#keyboard li').on('touchstart',function(){
+    	$(this).addClass('click');
+        if ($(this).hasClass('delete')) {
+        	$(passwords.elements[--index%6]).val('');
+        	if($(passwords.elements[0]).val()==''){
+        		index = 0;
+        	}
+            return false;
+        }
+        if ($(this).hasClass('symbol') || $(this).hasClass('tab')){
+            character = $(this).text();
+			$(passwords.elements[index++%6]).val(character);
+			if($(passwords.elements[5]).val()!=''){
+        		index = 0;
+        	}
+            if($(passwords.elements[5]).val()!='') {
+                var temp_rePass_word = '';
+                for (var i = 0; i < passwords.elements.length; i++) {
+                    temp_rePass_word += $(passwords.elements[i]).val();
+                }
+                check_pass_word = temp_rePass_word;
+    	    	// console.log(check_pass_word);
+                $('.pass').val('');
+                loading('loading...');
+	        	var password=check_pass_word;
+	            var amount=$('[name="amount"]').val();
+	            var base = new Base64();
+				var json=JSON.parse(base.decode(sess.info));
+				var userTypeNum=json.type;
+	           	if(userTypeNum==2){
+	            	var userType='JXS';
+	            }else if(userTypeNum==1){
+	            	var userType='XLC';
+	            }else{
+	            	var userType='PTYH';
+	            };
+	            $('#keyboard li').removeClass('click');
+
+				$.ajax({
+					url: api+'/api/withdraw/cash/apply',
+					type: 'POST',
+					dataType: 'json',
+					data: {loginAccount:userName(),account:account(),amount:amount,password:password,userType:userType,requestTokenId:requestTokenId()},
+					success:function(data){
+						loadingRemove();
+						if (data.success) {
+							$(this).addClass('click');
+	        				window.location.href="../ucenter/withdraw_success.html?bill="+data.info.orderNo;
+						}else{
+							$(this).addClass('click');
+							$.MsgBox.Confirmt(data.message,'找回密码','确定',function(){
+								return false;
+						    },function(){
+						        window.location.href="../ucenter/tel_code.html?find=1";
+						    })
+						};
+					},
+			        complete : function(XMLHttpRequest,status){
+			            loadingRemove();
+			    　　　　if(status=='error'){
+			     　　　　　 alert('提现失败，请重试');
+			    　　　　}else if(status=='timeout'){
+			     　　　　　 alert('提现失败，请重试');
+			            }
+			    　　}
+				});
+			}
+		}
+        return false;
+    });
+   	$('#keyboard li').on('touchend',function(e) {
+	   	$(this).removeClass('click');
+	});
+});
+(function () {
+    function tabForward(e) {
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+        if (target.value.length === target.maxLength) {
+            var form = target.form;
+            for (var i = 0, len = form.elements.length-1; i < len; i++) {
+                if (form.elements[i] === target) {
+                    if (form.elements[i++]) {
+                        form.elements[i++].focus();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    var form = document.getElementById("password");
+    form.addEventListener("keyup", tabForward, false);
+    var set_text='';
+    $("#set_text").html(set_text);
+})();
+
+/*获取银行卡信息*/
+function bankList(){
+	$.ajax({
+		url: api+'/api/wx/account/bank/list',
+		type: 'POST',
+		timeout : 10000,
+		dataType: 'json',
+		data: {account:account(),requestTokenId:requestTokenId()},
+		success:function(data){
+			/*获取手续费和最大提现值*/
+			findpoundage()
+			// console.log(data);
+			if (data.success) {
+				// console.log(data.info)
+				var cardNum=data.info.bankNo;
+				var cardNumLen=cardNum.length;
+				var xing="";
+				for (var i = 0; i < cardNumLen-4; i++) {
+					xing+='*';
+				};
+				var phoneXing = xing + cardNum.substr(cardNumLen-4);
+				$('#bindCard').html(data.info.bankOwned+'('+phoneXing+')');
+				$('#extractAmount').html(toDecimal2(data.info.extractAmount));
+			}else{
+				alert(data.message);
+			};
+		},
+        complete : function(XMLHttpRequest,status){
+            loadingRemove();
+    　　　　if(status=='error'){
+     　　　　　 $.MsgBox.Confirmt("请求超时，</br>重新获取账户信息或跳到上一页",'重新获取','上一页',function(){
+					window.location.href='account.html';
+			    },function(){
+			        bankList();
+			    });
+    　　　　}else if(status=='timeout'){
+     　　　　　 $.MsgBox.Confirmt("请求超时，</br>重新获取账户信息或跳到上一页",'重新获取','上一页',function(){
+					window.location.href='account.html';
+			    },function(){
+			        bankList();
+			    });
+            }
+    　　}
+	});
+}
+
+/*获取手续费和最大提现值*/
+function findpoundage(){
+	$.ajax({
+		url: api+'/api/wx/account/findpoundage',
+		type: 'POST',
+		timeout : 10000,
+		data: {requestTokenId:requestTokenId()},
+		dataType: 'json',
+		success:function(data){
+			if (data.success) {
+				if (data.info!=null) {
+					$('#amountShouInp').val(data.info.takePoundageMoney.toFixed(2));
+					$('#serviceCharge').html(data.info.takePoundageMoney.toFixed(2));
+					$('#takeMaxMoney').val(data.info.takeMaxMoney);
+				}else{
+					$('#amountShouInp').val('0.00');
+					$('#serviceCharge').html('0.00');
+				};
+			}else{
+				alert(data.message);
+			};
+		},
+        complete : function(XMLHttpRequest,status){
+            loadingRemove();
+    　　　　if(status=='error'){
+     　　　　　 $.MsgBox.Confirmt("请求超时，</br>重新获取账户信息或跳到上一页",'重新获取','上一页',function(){
+					window.location.href='account.html';
+			    },function(){
+			        bankList();
+			    });
+    　　　　}else if(status=='timeout'){
+     　　　　　 $.MsgBox.Confirmt("请求超时，</br>重新获取账户信息或跳到上一页",'重新获取','上一页',function(){
+					window.location.href='account.html';
+			    },function(){
+			        bankList();
+			    });
+            }
+    　　}
+	});
+}
+
+function serviceCharge(value){
+	if (value.length>0) {
+		var amountShouInp=$('#amountShouInp').val();
+		if (parseFloat(value)>0&&parseFloat(amountShouInp)>0) {
+			$('.amount_shou').css('display', 'block');
+		};
+	}else if(value.length==0){
+		$('.amount_shou').css('display', 'none');
+	};
+}
+function amountTi(){
+    MtaH5.clickStat('ucenter_withdraw_question');
+	var takeMaxMoney=$('#takeMaxMoney').val();
+	if (takeMaxMoney) {
+		$.MsgBox.Alert('单日可多次进行提现</br>要求每笔提现<'+takeMaxMoney+'元','确定');
+	}else{
+		$.MsgBox.Alert('不限制最大提现金额','确定');
+	};
+}
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

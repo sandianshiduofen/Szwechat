@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" style="background:;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>微信登录</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+</head>
+<body>
+<section>
+	<div class="login_head">
+		<span><img id="wx_head" src="../skin/images/user_head.jpg" alt=""></span>
+		<p>亲爱的微信用户：<b id="Nickname">三点十多分</b></p>
+		<p>为了给您一个更好的服务，请关联一个三真账号</p>
+	</div>
+	<div class="login_select">
+		<p>还没有三真账号？</p>
+		<div><a class="login_btn register" href="">快速注册</a></div>
+		<p>已有三真账号？</p>
+		<div><a class="login_btn now_bind" href="login_bind.html">立即关联</a></div>
+	</div>
+</section>
+
+<script type="text/javascript">
+$(function() {
+	$('#wx_head').attr('src', GetQueryString('Headimgurl'));
+	var base = new Base64();
+	var Nickname = base.decode(GetQueryString('Nickname'));
+	$('#Nickname').html(Nickname);
+	$('.register').attr('href', 'login_tel.html?uid='+GetQueryString('unionid'));
+	$('.now_bind').attr('href', 'login_bind.html?uid='+GetQueryString('unionid'));
+
+	// 返回退出
+	popstate();
+});
+
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>做最强镖师</title>
+	<style type="text/css">
+	body, ul, ol, dl, dd, h1, h2, h3, h4, h5, h6, form, input,p, blockquote, table, th, td{ margin: 0; padding: 0; resize: none; list-style: none;}
+	html { background: #fffca4; font-size: 100px; max-width: 1080px;margin: 0 auto;}
+	body { color: #555; line-height: 1; background: #fffca4; -webkit-touch-callout: none; user-select: none; font-size: 0.12rem; font-family: tahoma,Helvetica, Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "\5FAE\8F6F\96C5\9ED1";}
+	table { border-collapse: collapse; border-spacing: 0;}
+	img {border: none;display:block;}
+	img, object, select, input, textarea, button { vertical-align: middle; box-sizing: content-box; }
+	input, textarea, select, address, em, i, b, strong, th, button{ font-style: normal; text-decoration: none; }
+	input, textarea, select, button { -webkit-appearance: none; -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2); -moz-appearance:none;appearance:none;}
+	a { text-decoration: none; cursor: pointer; color: #555; }
+	a:hover, a:focus { outline: none; }
+	::-webkit-scrollbar { width: 0; }
+	.common{width:100%;}
+	.w100 img{width:100%;height:auto;}
+	.count{position: relative;background: url(images/con1_bg.jpg) 0 0 repeat-y;-webkit-background-size: 100% auto;background-size: 100% auto;}
+	.countCon{width:86%;border-radius:0.1rem;padding:2%;margin:0 auto;/* background: #ff1c23; */}
+	.countDown{height:0.4rem;line-height: 0.4rem;text-align: center;font-size:0.15rem;margin-bottom:0.1rem;color:#4a4a4a;background: #fdd527;border-radius:5px;padding:5px 0;overflow: hidden;}
+	.countDown span{font-size:0.22rem;background: #4a4a4a;border-radius:5px;display:inline-block;width:0.34rem;text-align: center;color:#fff;}
+	.sumMount{font-size:0.18rem;padding:0.05rem 0;}
+	.sumMount span{font-size:0.3rem;color:#eb1a4f;}
+
+	.jiangli{width:30%;float: left;}
+	.jiangli>div{margin:0 auto;width:90%;position: relative;}
+	.jiangli p{text-align: center;font-size:0.16rem;line-height: 0.34rem;color:#fff;}
+
+	/* 百分比圆 */
+    .circle {width: 80px;height:80px;border-radius: 50%;background: #fdd527;margin:0 auto;position: relative;}
+    .pie_left, .pie_right {width:80px; height:80px;position: absolute;top: 0;left: 0;}
+    .left, .right {width:80px; height:80px;background:#fff;border-radius: 50%;position: absolute;top: 0;left: 0;}
+    .pie_right, .right {clip:rect(0,auto,auto,40px);}
+    .pie_left, .left {clip:rect(0,40px,auto,0);}
+    .mask {width: 60px;height: 60px;border-radius: 50%;left: 10px;top: 10px;background: #ff1c23;position: absolute;text-align: center;line-height: 60px;font-size: 20px;font-weight: bold;color: #fff;}
+
+	.addUp{background: #fff;border-radius:3px;color:#4a4a4a;width:64%;float: right;padding:10px 3%;}
+	.jia{overflow: hidden;}
+	.addUp p{font-size:0.16rem;line-height: 0.45rem;}
+
+	@media screen and (max-width: 360px) {
+		/* 百分比圆 */
+	    .circle {width: 70px;height:70px;}
+	    .pie_left, .pie_right {width:70px; height:70px;}
+	    .left, .right {width:70px; height:70px;}
+	    .pie_right, .right {clip:rect(0,auto,auto,35px);}
+	    .pie_left, .left {clip:rect(0,35px,auto,0);}
+	    .mask {width: 50px;height: 50px;left: 10px;top: 10px;line-height: 50px;font-size: 20px;}
+	    .jiangli p{font-size:0.16rem;}
+
+	    .countDown{font-size:14px;height:0.3rem;line-height: 0.3rem;}
+	    .countDown span{font-size:0.18rem;width:0.26rem;}
+	    .sumMount{font-size:0.16rem;}
+	    .sumMount span{font-size:0.24rem;}
+	    .addUp p{font-size:0.15rem;line-height: 0.38rem;}
+	}
+	#mb_btn_ok_a{background: #fff !important;font-size:0.14rem !important;}
+	.loadingZhuan{position: fixed;left:0;top: 0;top: 0;bottom: 0;right: 0;background: rgba(0,0,0,0.1);z-index: 100;}
+	.loadingZ{position: fixed;height:0.7rem;width:1rem;background: rgba(0,0,0,0.7);left:50%;margin-left:-0.5rem;top:50%;margin-top:-0.5rem;border-radius:3px;padding:0.15rem 0;}
+	.loadingZ img{width:0.4rem;display:block;margin:0 auto;}
+	.loadingZ p{text-align: center;color:#fff;line-height: 0.3rem;font-size:0.14rem;}
+	footer{padding:0.12rem 0 0.18rem;text-align: center;color:#111;}
+
+	</style>
+</head>
+<body>
+	<div class="banner common w100">
+		<img src="images/banner1.jpg" alt="焦点图">
+	</div>
+	<div class="banner common w100">
+		<img src="images/banner2.jpg" alt="焦点图">
+	</div>
+	<div class="count common w100">
+		<div class="countCon">
+			<div class="countDown" id="timer">距活动结束：<span>00</span> 天 <span>00</span> 时 <span>00</span> 分 <span>00</span> 秒</div>
+			<div class="jia">
+				<div class="jiangli">
+					<div class="percent">
+						<div class="circle" style="left:0">
+					        <div class="pie_left"><div class="left"></div></div>
+					        <div class="pie_right"><div class="right"></div></div>
+					        <div class="mask"><span>0</span>家</div>
+					    </div>
+					</div>
+					<p>奖励<span id="jiangPrice">0</span>元</p>
+				</div>
+				<div class="addUp">
+					<p id="sumMount">已拉动活跃修理厂：<span>0</span>家</p>
+					<p id="havePrice">已达到奖励：<span>0</span>元</p>
+					<!-- <p id="reminder">还差<span id="reminderCa">30</span>家即可升级为<span id="reminderJ">300</span>元大奖</p> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="common w100">
+		<img src="images/explain.jpg" alt="活动内容">
+	</div>
+	<div class="common w100">
+		<img src="images/regulation.jpg" alt="活动说明">
+	</div>
+
+	<footer>本活动以服务站和北京三真车联信息技术有限公司统计数据为准</footer>
+
+<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+<script type="text/javascript" src="../common/js/pop_up.js"></script>
+<script language="javascript" type="text/javascript">
+var api="http://activity.3zqp.com";
+var currentTime;
+var sendPersonId=GetQueryString('id'),
+	startDateTime=1513526400000,
+	endDateTime=1517414399000;
+if (sendPersonId) {
+	loading('加载中...'); 
+	$.ajax({
+		url: api+'/api/best/distributor/activity',
+		type: 'POST',
+		timeout:10000,
+		dataType: 'json',
+		data: {
+			sendPersonId:sendPersonId,
+			startDateTime:startDateTime,
+			endDateTime:endDateTime,
+			requestTokenId:requestTokenId()
+		},
+		success:function(data){
+			if (data.success) {
+				var info=data.info||{};
+				currentTime=info.timestamp;
+				var sumFreightAmount=parseInt(info.repairDepotNum)||0;
+				var jiangPrice=info.hasReachedMoney||0;
+				// 倒计时
+				var endDateTimeN = new Date();
+				endDateTimeN.setTime(endDateTime);
+				var endDateTimeShow=endDateTimeN.format('yyyy,MM,dd,h,m,s');
+				var endDateTimeShowEnd=endDateTimeShow.split(',')
+				if (endDateTime&&endDateTime) {
+					leftTimer(endDateTimeShowEnd[0],endDateTimeShowEnd[1],endDateTimeShowEnd[2],endDateTimeShowEnd[3],endDateTimeShowEnd[4],endDateTimeShowEnd[5])
+					var timer=setInterval('leftTimer('+endDateTimeShowEnd[0]+','+endDateTimeShowEnd[1]+','+endDateTimeShowEnd[2]+','+endDateTimeShowEnd[3]+','+endDateTimeShowEnd[4]+','+endDateTimeShowEnd[5]+')',1000);
+				};
+				// 百分比圆
+				addPercent(sumFreightAmount);
+				// 拉动家数和达到奖励
+				$('#sumMount span').html(sumFreightAmount)
+				$('#havePrice span,#jiangPrice').html(jiangPrice);
+			}else{
+				alert(data.message)
+			};
+		},
+		complete : function(XMLHttpRequest,status){
+			loadingRemove();
+		    if(status=='error'||status=='timeout'){
+		    	alert('信息请求失败，请重试')
+		    }
+		}
+	});
+}else{
+	alert('未获取到用户信息')
+};
+// 百分比
+function addPercent(sum){
+	var num=parseInt((sum/80)*100);
+	if (num>100) {
+		num=100;
+	};
+	if(num>100)return;
+		var c=document.getElementsByClassName("circle")[0];
+		c.getElementsByTagName("span")[0].innerHTML=sum;
+		num=num*3.6;
+	if(num<=180){
+		c.getElementsByClassName("right")[0].style.transform="rotate(" + num + "deg)";
+	}else{
+		c.getElementsByClassName("right")[0].style.transform="rotate(180deg)";
+		c.getElementsByClassName("left")[0].style.transform="rotate(" + (num - 180) + "deg)";
+	}
+	if($('.mask span').html().length>=3){
+		$('.mask').css('font-size', '14px');
+	};
+}
+
+function leftTimer(year,month,day,hour,minute,second){
+	//var leftTime = (new Date(year,month-1,day,hour,minute,second)) - (new Date()); //计算剩余的毫秒数 
+	var leftTime = (new Date(year,month-1,day,hour,minute,second)) - currentTime; //计算剩余的毫秒数 
+	currentTime=currentTime+1000;
+	var days = parseInt(leftTime / 1000 / 60 / 60 / 24 , 10); //计算剩余的天数 
+	var hours = parseInt(leftTime / 1000 / 60 / 60 % 24 , 10); //计算剩余的小时 
+	var minutes = parseInt(leftTime / 1000 / 60 % 60, 10);//计算剩余的分钟 
+	var seconds = parseInt(leftTime / 1000 % 60, 10);//计算剩余的秒数  
+	if (days<=0) {
+		days=0;
+	};
+	if (hours<=0) {
+		hours=0;
+	};
+	if (minutes<=0) {
+		minutes=0;
+	};
+	if (seconds<=0) {
+		seconds=0;
+	};
+	days = checkTime(days);
+	hours = checkTime(hours);
+	minutes = checkTime(minutes);
+	seconds = checkTime(seconds);
+	if (days<=0 & hours<=0 & minutes<=0  & seconds<=0 ) {
+		clearTimeout(timer)
+		document.getElementById("timer").innerHTML = "活动已结束"
+	}else{
+		document.getElementById("timer").innerHTML ="距活动结束：<span>"+days+"</span> 天 <span>"+hours+"</span> 时 <span>"+minutes+"</span> 分 <span>"+seconds+"</span> 秒"; 
+	};
+}
+function checkTime(i){
+	if(i<10) { 
+		i = "0" + i; 
+	} 
+	return i; 
+}
+
+function requestTokenId(num){
+	len =num||32;
+　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+　　var maxPos = $chars.length;
+　　var pwd = '';
+　　for (i = 0; i < len; i++) {
+　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+　　}
+	return 'wx_tms_'+pwd;
+}
+
+
+/*时间转换*/
+Date.prototype.format = function(format) {
+	var date = {
+		"M+": this.getMonth() + 1,
+		"d+": this.getDate(),
+		"h+": this.getHours(),
+		"m+": this.getMinutes(),
+		"s+": this.getSeconds(),
+		"q+": Math.floor((this.getMonth() + 3) / 3),
+		"S+": this.getMilliseconds()
+	};
+	if (/(y+)/i.test(format)) {
+	  	format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+	}
+	for (var k in date) {
+		  if (new RegExp("(" + k + ")").test(format)) {
+		        format = format.replace(RegExp.$1, RegExp.$1.length == 1
+		                ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+		  }
+	}
+	return format;
+};
+/*获取链接参数*/
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+// 加载
+function loading(text){
+	var html='<div class="loadingZhuan"><div class="loadingZ"><img src="../common/images/zhuan.gif"><p>'+text+'</p></div></div>';
+	$('body').append(html);
+}
+function loadingRemove(){
+	$('.loadingZhuan').remove();
+}
+
+
+</script> 
+<!-- 腾讯监控开始 -->
+<!-- <script>
+	var _mtac = {};
+	(function() {
+		var mta = document.createElement("script");
+		mta.src = "http://pingjs.qq.com/h5/stats.js?v2.0.2";
+		mta.setAttribute("name", "MTAH5");
+		mta.setAttribute("sid", "500565159");
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(mta, s);
+	})();
+</script> -->
+<!-- 腾讯监控结束 -->
+</body>
+</html>

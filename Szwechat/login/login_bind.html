@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" style="background:;">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>微信登录</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+</head>
+<body>
+<section>
+	<div class="login_logo"><img src="../skin/images/login.gif" height="519" width="1080" alt=""></div>
+	<ul class="login_bind">
+		<li><input type="text" name="account" placeholder="账号" onblur="noNull($(this),'账号')" oninput="if(value.length>11)value=value.slice(0,11)"></li>
+		<li><input type="password" name="password" placeholder="密码" onblur="noNull($(this),'密码')" oninput="if(value.length>20)value=value.slice(0,20)"></li>
+	</ul>
+	<div class="msg_login"><p class="msg"></p></div>
+	<div class="forget_psw"><a href="../login/forget_psd.html">忘记密码？</a></div>
+	<div class="login_bind_btn"><a class="login_btn" onclick="loginBindSubmit()">登录</a></div>
+</section>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

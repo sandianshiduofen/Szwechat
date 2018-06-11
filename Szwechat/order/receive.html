@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>收发记录</title>
+	<link rel="stylesheet" href="../skin/css/main.css?v=1">
+	<link rel="stylesheet" href="../skin/js/swiper/swiper.css">
+	<link rel="stylesheet" href="../skin/js/mobiscroll/mobiscroll.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/swiper/swiper.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/mobiscroll/mobiscroll_date.js?v=1" charset="gb2312"></script>
+	<script type="text/javascript" src="../skin/js/mobiscroll/mobiscroll.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/record.js?v=1"></script>
+
+	<style type="text/css">
+    .swiper-container-horizontal>.swiper-scrollbar{bottom:-3px;}
+    .swiper-scrollbar-drag{background: rgba(0,0,0,.2);}
+	</style>
+</head>
+<body>
+<section class="send_receive">
+	<nav class="send_nav">
+		<p><a href="send_out.html">发货记录</a></p>
+		<p><a class="current" href="javascript:;">收货记录</a></p>
+	</nav>
+	<div class="send_list_search">
+		<div class="swiper-container search_condition_c">
+	        <div class="swiper-wrapper">
+	        </div>
+	        <div class="swiper-scrollbar"></div>
+	    </div>
+		<span href="javascript:;" class="search_list_btn" onclick="filetrShow();MtaH5.clickStat('order_receive_filtrate')">筛选</span>
+	</div>
+	<div class="record_list" id="record_list">
+	</div>
+	<div class="loading" data-sumPage="1" data-page="1" data-type="list"></div>
+</section>
+
+<div class="protocol_pop_send_w"></div>
+<div class="receive_pop_c protocol_pop_send">
+	<div class="uc_cou_bot">
+		<header class="header_box3">
+			<div class="header">
+				<div class="header_goback" onclick="filetrsHide()">返回上一页</div>
+				<div class="header_title"  onclick="filetrsHide()">返回</div>
+			</div>
+		</header>
+		<div class="filtrate">
+			<div class="filtrateTop">
+				<span>状态:</span>
+				<ul>
+					<li><label><input type="checkbox" name="state" value="1"><span>已揽货</span></label></li>
+					<li><label><input type="checkbox" name="state" value="2"><span>运输中</span></label></li>
+					<li><label><input type="checkbox" name="state" value="3"><span>配送中</span></label></li>
+					<li><label><input type="checkbox" name="state" value="6"><span>已签收</span></label></li>
+					<li><label><input type="checkbox" name="state" value="5"><span>已退货</span></label></li>
+				</ul>
+			</div>
+			<div class="filtrateTime">
+				<span>下单时间：</span>
+				<input type="text" class="filetrsTime" id="date_start" onchange="startTime(value)" >
+				<b></b>
+				<input type="text" class="filetrsTime" id="date_end" onchange="endTime(value)" >
+			</div>
+			<div class="filtrateBtn">
+				<a href="javascript:;" onclick="filetrsReset();MtaH5.clickStat('order_receive_reset')">重置</a>
+				<a href="javascript:;" onclick="corresponSearch(1)">确定</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+if (userId()) {
+	// sessionStorage.removeItem("nowRecPage");
+	var search=GetQueryString('search');
+	if (search) {
+		sessionStorage.removeItem("nowRecPage");
+		sessionStorage.removeItem("recScrollTop");
+	};
+	if (sess.nowRecPage) {
+		var page=sess.nowRecPage;
+		for (var i = 0; i < page; i++) {
+			recordOutList(i+1);
+		};
+	}else{
+		var page=1;
+		recordOutList(page);
+	};
+	if (sess.recScrollTop) {
+		$('html,body').animate({scrollTop:sess.recScrollTop}, 200);
+	};
+	
+	$(document).scroll(function(){
+		if ($('.record_li').length>0) {
+			sess.recScrollTop=$("body").scrollTop();
+			/*窗口的高度*/
+			var bheight = $(window).height();
+			var sheight = $("body")[0].scrollHeight;
+			var stop = $("body").scrollTop();
+			if (sess.nowRecPage) {
+				var currentPage=sess.nowRecPage;
+			}else{
+				var currentPage=1;
+			};
+			var allPages=sess.recordPages;
+			if(stop>=sheight-bheight && currentPage<allPages){
+				var state=GetQueryString('state');
+				var startTimeCuo=GetQueryString('startTime');
+				var endTimeCuo=GetQueryString('endTime');
+				if (!state) {
+					state="";
+				};
+				if (!startTimeCuo) {
+					startTimeCuo="";
+				};
+				if (!endTimeCuo) {
+					endTimeCuo="";
+				};
+
+				$('.loading').html('<img src="../skin/images/loading1.gif" alt="正在加载...">')
+				if (currentPage) {
+					curPage=currentPage;
+				}else{
+					curPage=1;
+				};
+				var loadPage=parseInt(curPage)+1;
+				if (recordOutList(loadPage)) {
+					sess.nowRecPage=loadPage;
+				};
+			}else if(currentPage==allPages){
+				$('.loading').html('已获取全部')
+			}
+
+		};
+	});
+}else{
+	window.location.href='../login/not_login.html'
+};
+
+/*时间插件*/
+$(function () {
+	var currYear = (new Date()).getFullYear();	
+	var opt={};
+	opt.date = {preset : 'date'};
+	opt.datetime = {preset : 'datetime'};
+	opt.time = {preset : 'time'};
+	opt.default = {
+		theme: 'android-ics light', //皮肤样式
+		display: 'bottom', //显示方式 
+		mode: 'scroller', //日期选择模式
+		dateFormat: 'yy-mm-dd',
+		lang: 'zh',
+		showNow: true,
+		nowText: "今天",
+		startYear: currYear - 50, //开始年份
+		endYear: currYear //结束年份
+	};
+
+	$("#date_start").mobiscroll($.extend(opt['date'], opt['default']));
+	$("#date_end").mobiscroll($.extend(opt['date'], opt['default']));
+
+	/*退出页面*/
+	var u = navigator.userAgent, app = navigator.appVersion;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+	if (isAndroid) {
+		popstate();
+	};
+});
+
+
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

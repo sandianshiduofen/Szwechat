@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script type="text/javascript" src="http://weixinweb.3zqp.com/skin/js/jquery.min.js"></script>
+</head>
+<body>
+<form id="uploadForm" action="php.pho" method="post" onsubmit="return doUpload()">  
+	<!-- <input type="hidden" name="type" value="3" />
+  <input type="hidden" name="path" value="headImg" />
+  <input name="headImgShow" type="hidden" value=""> -->
+  <p>上传文件： <input type="file" name="file"/></p>  
+  <input type="submit" value="上传"/>  
+</form>
+<script type="text/javascript">
+function doUpload(){
+  console.log('sss')
+  return false;
+   /* var formData = new FormData($( "#uploadForm" )[0]);
+    console.log(formData);
+    formData.append('type',3)
+    formData.append('path','headImg')
+    $.ajax({  
+        url: 'http://tmsimg.3zqp.com/api/tms/pc/upload' ,  
+        type: 'POST',  
+        data: formData,  
+        async: false,  
+        cache: false,  
+        contentType: false,  
+        processData: false,  
+        success: function (returndata) {  
+          console.log(returndata)
+        },
+        complete : function(XMLHttpRequest,status){
+          console.log(XMLHttpRequest)
+          console.log(status);
+        }
+    }); */
+} 
+</script>
+</body>
+</html>

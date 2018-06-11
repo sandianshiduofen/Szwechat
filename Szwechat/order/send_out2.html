@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>发货记录</title>
+	<link rel="stylesheet" href="../skin/css/main.css">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/areaSource.js"></script>
+</head>
+<body>
+
+<section class="send_receive">
+	<nav class="send_nav">
+		<p><a class="current" href="javascript:;">发货记录</a></p>
+		<p><a href="receive.html">收货记录</a></p>
+	</nav>
+	<div class="send_list_search">
+		<p class="search_condition"></p>
+		<a href="javascript:;" class="search_list_btn" onclick="filetrShow()">筛选</a>
+	</div>
+	<div class="record_list" id="record_list">
+	</div>
+	<!-- <div class="loading" data-sumPage="1" data-page="1" style="text-align:center" data-type="list"></div> -->
+	<div class="loading" data-sumPage="1" data-page="1" style="text-align:center" data-type="list"></div>
+</section>
+
+
+<!-- 筛选浮层 -->
+<div class="receive_pop_w filtrate_w" style="display:none">
+	<div class="receive_pop">
+		<div class="receive_pop_c protocol_pop_send">
+			<div class="uc_cou_bot">
+				<header class="header_box2">
+					<div class="header">
+						<div class="header_goback" onclick="filetrsHide()">返回上一页</div>
+						<div class="header_title"  onclick="filetrsHide()">返回</div>
+					</div>
+				</header>
+				<div class="filtrate">
+					<div class="filtrateTop">
+						<span>状态:</span>
+						<ul>
+							<li><label><input type="checkbox" name="state" value="0"><span>待揽货</span></label></li>
+							<li><label><input type="checkbox" name="state" value="1"><span>已揽货</span></label></li>
+							<li><label><input type="checkbox" name="state" value="2"><span>运输中</span></label></li>
+							<li><label><input type="checkbox" name="state" value="3"><span>配送中</span></label></li>
+							<li><label><input type="checkbox" name="state" value="6"><span>已签收</span></label></li>
+							<li><label><input type="checkbox" name="state" value="4"><span>已取消</span></label></li>
+							<li><label><input type="checkbox" name="state" value="5"><span>已退货</span></label></li>
+							<li><label><input type="checkbox" name="state" value="7"><span>已驳回</span></label></li>
+						</ul>
+					</div>
+					<div class="filtrateTime">
+						<span>下单时间：</span>
+						<input type="text" class="filetrsTime" id="date_start" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{mydate.$D(\'date_end\')}'})" readonly>
+						<b></b>
+						<input type="text" class="filetrsTime" id="date_end" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{mydate.$D(\'date_start\')}'})" readonly>
+					</div>
+					<div class="filtrateBtn">
+						<a href="javascript:;" onclick="filetrsReset()">重置</a>
+						<a href="javascript:;" onclick="corresponSearch(1)">确定</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var provs=JSON.parse(provsData);
+	var citys=JSON.parse(citysData);
+	var dists=JSON.parse(distsData);
+	for (var j in citys) {
+		for (var i = 0; i < citys[j].length; i++) {
+			for (var k in dists) {
+				if (citys[j][i].value===k) {
+					citys[j][i]['child']=dists[k];
+				};
+			};
+		};
+		
+	};
+	for (var i = 0; i < provs.length; i++) {
+		for (var j in citys) {
+			if (provs[i].value===j) {
+				provs[i]['child']=citys[j];
+			};
+		};
+	};
+	console.log(provs);
+</script>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

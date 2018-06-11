@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>忘记密码</title>
+	<link rel="stylesheet" href="../skin/css/account.css?v=1">
+	<script type="text/javascript" src="../skin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../skin/js/pop_up.js"></script>
+	<script type="text/javascript" src="../skin/js/main.js?v=1"></script>
+	<script type="text/javascript" src="../skin/js/account.js?v=1"></script>
+</head>
+<body>
+<header class="header_box">
+	<div class="header">
+		<div class="header_goback" onclick="headerGoback()">返回上一页</div>
+		<div class="header_title"  onclick="headerGoback()">返回</div>
+	</div>
+</header>
+<section class="reset_password">
+	<ul>
+		<li><input type="number" name="tel" placeholder="输入手机号" onblur="PhoneNo($(this))" oninput="if(value.length>11)value=value.slice(0,11)"></li>
+		<li><input type="text" name="code" placeholder="输入手机验证码" oninput="if(value.length>6)value=value.slice(0,6)" type="number" onblur="verify($(this))"><a href="javascript:;" onclick="resetGetCode($(this))">获取验证码</a></li>
+		<li><input placeholder="请输入6-16位数字和字母的新密码" name="password"  type="password" placeholder="请输入6-16位数字和字母的密码" onblur="password($(this),'密码')" maxlength="16"></li>
+		<li><input placeholder="确认密码" name="password2" type="password" placeholder="请重复输入您的密码" onblur="password2($(this))" maxlength="16"></li>
+	</ul>
+	<div class="msg_login"><p class="msg"></p></div>
+</section>
+<footer class="footer2">
+	<input class="footer_btn" type="button" value="提交" onclick="foPswSubmit()">
+</footer>
+<!-- 腾讯监控 -->
+<script type="text/javascript">
+(function() {
+	var rnd=Math.floor(Math.random()*1000000);
+	var mta = document.createElement("script");
+	mta.setAttribute("type", "text/javascript");
+	mta.src = "../skin/js/tencent.js?rnd="+rnd;
+	var s = document.getElementsByTagName("script")[0];
+	s.parentNode.insertBefore(mta, s);
+})();
+</script>
+</body>
+</html>

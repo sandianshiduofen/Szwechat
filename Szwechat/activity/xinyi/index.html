@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>信义汽配</title>
+	<style type="text/css">
+	body, ul, ol, dl, dd, h1, h2, h3, h4, h5, h6, form, input,p, blockquote, table, th, td,button{ margin: 0; padding: 0; resize: none; list-style: none;}
+	html { background: #efeff4; font-size: 100px; max-width: 1080px;margin: 0 auto;}
+	body { color: #555; line-height: 1; background: #fd3400; -webkit-touch-callout: none; user-select: none; font-size: 0.12rem; font-family: tahoma,Helvetica, Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "\5FAE\8F6F\96C5\9ED1";}
+	table { border-collapse: collapse; border-spacing: 0;}
+	img {border: none;display:block;}
+	img, object, select, input, textarea, button { vertical-align: middle; box-sizing: content-box; }
+	input, textarea, select, address, em, i, b, strong, th, button{ font-style: normal; text-decoration: none; }
+	input, textarea, select, button { -webkit-appearance: none; -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2); -moz-appearance:none;appearance:none;}
+	a { text-decoration: none; cursor: pointer; color: #555; }
+	a:hover{ outline: none; background: none;-webkit-tap-highlight-color: transparent;}
+	::-webkit-scrollbar { width: 0; }
+	
+	section{min-height:5rem;}
+	.common{width:100%;}
+	.w100 img{width:100%;height:auto;}
+	.banner{position: relative;}
+	.banner_tel{width:60%;height:auto;position: absolute;bottom:6%;left:20%;}
+	.telBtnW,.telBtnBottom{position: relative;}
+	.tel_btn{position: absolute;width:20%;bottom:6%;left:52%;}
+	.tel_btn2{left:12%;}
+	.tel_btn3{left:12%;bottom:12%;}
+	.tel_btn4{left:58%;bottom:12%;}
+	.tel_btn_bottom{position: absolute;width:42%;left:29%;bottom:6%;}
+	footer{background: #4a4a4a;color:#fff;font-size:0.14rem;text-align: center;padding:0.1rem 0;line-height: 0.2rem;margin-top:0.1rem;}
+	.callTel_bg{background: rgba(0, 0, 0, 0.6);position: fixed;top:0;left:0;right:0;bottom: 0;z-index:2;}
+	.callTel{height:auto;width:70%;position: fixed;left:50%;margin-left:-35%;border-radius:5px;top:50%;margin-top:-1rem;line-height: 0.5rem;z-index:3;font-size:0.16rem;}
+	.callTel_t{background: #fff;border-radius:5px;text-align: center;}
+	.callTel p{border-bottom:1px solid #ddd;}
+	.callTel a{color:#63a3e1;display:block;}
+	.callTel a.borderB{border-bottom:1px solid #ddd;}
+	.callTel span{height:0.36rem;display:block;margin-top:0.1rem;}
+	.callTel span img{height:100%;width:auto;display:block;margin:0 auto;}
+	</style>
+</head>
+<body>
+	<section>
+		<div class="banner common w100">
+			<img src="images/banner.jpg" alt="焦点图">
+		</div>
+		<div class="common w100">
+			<img src="images/con1.jpg" alt="">
+		</div>
+		<div class="common w100 telBtnBottom">
+			<img src="images/con2.jpg" alt="">
+			<a class="tel_btn" href="javascript:showTel();"><img src="images/tel-btn.png" alt="拨打电话"></a>
+		</div>
+		<div class="common w100 telBtnBottom">
+			<img src="images/con3.jpg" alt="">
+			<a class="tel_btn tel_btn2" href="javascript:showTel();"><img src="images/tel-btn.png" alt="拨打电话"></a>
+		</div>
+		<div class="common w100 telBtnBottom">
+			<img src="images/con4.jpg" alt="">
+			<a class="tel_btn" href="javascript:showTel();"><img src="images/tel-btn.png" alt="拨打电话"></a>
+		</div>
+		<div class="common w100 telBtnBottom">
+			<img src="images/con5.jpg" alt="">
+			<a class="tel_btn tel_btn3" href="javascript:showTel();"><img src="images/tel-btn.png" alt="拨打电话"></a>
+			<a class="tel_btn tel_btn4" href="javascript:showTel();"><img src="images/tel-btn.png" alt="拨打电话"></a>
+		</div>
+	</section>
+
+<script type="text/javascript">
+	function showTel(){
+		var html='<div class="callTel_bg" id="callTel_bg" onclick="removeTel()"></div><div class="callTel" id="callTel"><div class="callTel_t"><p>拨打电话</p><a href="tel:15234061856" class="borderB">15234061856</a><a href="tel:0351-7082210">0351-7082210</a></div><span class="callTel_btn" onclick="removeTel()"><img src="./images/x.png"></button></span>';
+		var telBox=document.createElement('div');
+		telBox.innerHTML=html;
+		document.getElementsByTagName('body')[0].appendChild(telBox);
+	}
+
+	function removeTel(){
+		var callTel=document.getElementById('callTel');
+		var callTel_bg=document.getElementById('callTel_bg');
+		callTel.parentNode.removeChild(callTel);
+		callTel_bg.parentNode.removeChild(callTel_bg);
+	}
+</script>
+<!-- 腾讯监控开始 -->
+<script>
+	var _mtac = {};
+	(function() {
+		var mta = document.createElement("script");
+		mta.src = "http://pingjs.qq.com/h5/stats.js?v2.0.2";
+		mta.setAttribute("name", "MTAH5");
+		mta.setAttribute("sid", "500565159");
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(mta, s);
+	})();
+</script>
+<!-- 腾讯监控结束 -->
+</body>
+</html>
